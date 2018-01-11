@@ -3,13 +3,13 @@
 // Version:	2.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_NUMBER_H_
-#define _SYSTEM_NUMBER_H_
+#ifndef _PRILIB_NUMBER_H_
+#define _PRILIB_NUMBER_H_
 #include "macro.h"
 #include <cmath>
 #include <string>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 namespace Number
 {
 	//--------------------
@@ -75,6 +75,6 @@ namespace Number
 	std::string to_string(const Rational &rat);
 	Rational to_rational(const std::string &str);
 }
-SYSTEM_END
+PRILIB_END
 
 #endif

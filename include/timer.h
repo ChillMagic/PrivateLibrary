@@ -3,12 +3,12 @@
 // Version: 1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_TIMER_H_
-#define _SYSTEM_TIMER_H_
+#ifndef _PRILIB_TIMER_H_
+#define _PRILIB_TIMER_H_
 #include "macro.h"
 #include <ctime>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class Timer
 {
 public:
@@ -22,6 +22,6 @@ public:
 
 	clock_t time;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

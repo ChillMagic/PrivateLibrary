@@ -3,15 +3,15 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_BYTEPOOL_H_
-#define _SYSTEM_BYTEPOOL_H_
+#ifndef _PRILIB_BYTEPOOL_H_
+#define _PRILIB_BYTEPOOL_H_
 #include "macro.h"
 #include "memory.h"
 #include "lightlist.h"
 #include <vector>
 #include <memory>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class BytePoolFixed
 {
 	using byte = uint8_t;
@@ -120,6 +120,6 @@ struct ByteSet
 		return bytes[(index + (int)sizeof(_VTy)) % (int)sizeof(_VTy)];
 	}
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

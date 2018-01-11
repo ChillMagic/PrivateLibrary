@@ -3,14 +3,14 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_LIGHTLIST_H_
-#define _SYSTEM_LIGHTLIST_H_
+#ifndef _PRILIB_LIGHTLIST_H_
+#define _PRILIB_LIGHTLIST_H_
 #include "macro.h"
 #include "memory.h"
 #include <memory>
 #include <algorithm>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename T>
 class lightlist_creater;
 
@@ -127,6 +127,6 @@ private:
 	size_t _count;
 	lightlist<T> _data;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

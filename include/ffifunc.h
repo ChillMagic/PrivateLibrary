@@ -3,8 +3,8 @@
 // Version: 1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_FFIFUNC_H_
-#define _SYSTEM_FFIFUNC_H_
+#ifndef _PRILIB_FFIFUNC_H_
+#define _PRILIB_FFIFUNC_H_
 #include "macro.h"
 #include "lightlist.h"
 #if defined(_MSC_VER)
@@ -19,7 +19,7 @@
 #	include <ffi.h>
 #endif
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class FFIFunc
 {
 public:
@@ -66,6 +66,6 @@ private:
 	ArgTypeSet arg_types;
 	ArgType rtype;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

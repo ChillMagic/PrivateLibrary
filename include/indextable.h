@@ -3,12 +3,12 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_INDEXTABLE_H_
-#define _SYSTEM_INDEXTABLE_H_
+#ifndef _PRILIB_INDEXTABLE_H_
+#define _PRILIB_INDEXTABLE_H_
 #include "macro.h"
 #include "bijectionmap.h"
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename _KTy, typename _VTy>
 class IndexTable
 {
@@ -94,6 +94,6 @@ private:
 	SerialBijectionMap<_KTy> keymap;
 	std::vector<_VTy> data;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

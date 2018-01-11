@@ -3,11 +3,12 @@
 // Version: 1.1.0.0
 
 #pragma once
-#define SYSTEM         namespace Common
-#define USING          using namespace
-#define SYSTEM_BEGIN   SYSTEM {
-#define SYSTEM_END     }
+#ifndef PRILIB
+#	define PRILIB         PriLib
+#endif
+#define PRILIB_BEGIN   namespace PRILIB {
+#define PRILIB_END     }
 
 //#define self (*this)
 
-SYSTEM_BEGIN SYSTEM_END
+PRILIB_BEGIN PRILIB_END

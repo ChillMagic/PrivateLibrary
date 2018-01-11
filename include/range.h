@@ -3,13 +3,13 @@
 // Version:	2.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_RANGE_H_
-#define _SYSTEM_RANGE_H_
+#ifndef _PRILIB_RANGE_H_
+#define _PRILIB_RANGE_H_
 #include "macro.h"
 #include <string>
 #include "prints.h"
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename T, typename Iter>
 class RangeBase
 {
@@ -210,6 +210,6 @@ inline std::string to_string(const RangeBase<T1, T2> &r)
 
 	return "range(" + to_string(r._begin) + "," + to_string(r._end) + ")";
 }
-SYSTEM_END
+PRILIB_END
 
 #endif

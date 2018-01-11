@@ -3,11 +3,11 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_EXPLICITTYPE_H_
-#define _SYSTEM_EXPLICITTYPE_H_
+#ifndef _PRILIB_EXPLICITTYPE_H_
+#define _PRILIB_EXPLICITTYPE_H_
 #include "macro.h"
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename _Ty, _Ty... _DfV>
 class ExplicitType;
 
@@ -39,6 +39,6 @@ public:
 	ExplicitType()
 		: ExplicitType<_Ty>(_DfV) {}
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

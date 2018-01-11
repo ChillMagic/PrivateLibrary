@@ -3,8 +3,8 @@
 // Version: 1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_DLLLOADER_H_
-#define _SYSTEM_DLLLOADER_H_
+#ifndef _PRILIB_DLLLOADER_H_
+#define _PRILIB_DLLLOADER_H_
 #include "macro.h"
 #include <memory>
 #include <type_traits>
@@ -24,7 +24,7 @@
 #	include <dlfcn.h>
 #endif
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class DLLLoader
 {
 public:
@@ -114,6 +114,6 @@ private:
 	std::shared_ptr<DLLData> data;
 	ErrorCode _errcode;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

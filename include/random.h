@@ -3,12 +3,12 @@
 // Version: 1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_RANDOM_H_
-#define _SYSTEM_RANDOM_H_
+#ifndef _PRILIB_RANDOM_H_
+#define _PRILIB_RANDOM_H_
 #include "macro.h"
 #include <cstdlib>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 inline int random_base(int n, int (*rand)(void))
 {
 	int rand_result;
@@ -26,6 +26,6 @@ inline int random(int begin, int end)
 {
 	return random(end - begin) + begin;
 }
-SYSTEM_END
+PRILIB_END
 
 #endif

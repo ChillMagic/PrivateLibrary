@@ -1,6 +1,6 @@
 #include "number.h"
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 namespace Number
 {
 	//--------------------
@@ -152,4 +152,4 @@ namespace Number
 			return Rational(std::stoll(str));
 	}
 }
-SYSTEM_END
+PRILIB_END

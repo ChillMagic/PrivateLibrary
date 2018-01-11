@@ -3,14 +3,14 @@
 // Version: 2.1.0.0
 
 #pragma once
-#ifndef _SYSTEM_CHARPTR_H_
-#define _SYSTEM_CHARPTR_H_
+#ifndef _PRILIB_CHARPTR_H_
+#define _PRILIB_CHARPTR_H_
 #include "macro.h"
 #include "memory.h"
 #include <string>
 #include <memory>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class charptr
 {
 public:
@@ -33,6 +33,6 @@ private:
 	size_t _capacity;
 	std::shared_ptr<char> data;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

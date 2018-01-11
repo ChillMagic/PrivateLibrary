@@ -3,19 +3,19 @@
 // Version:	2.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_MEMORY_H_
-#define _SYSTEM_MEMORY_H_
+#ifndef _PRILIB_MEMORY_H_
+#define _PRILIB_MEMORY_H_
 #include "macro.h"
 #include <utility>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 #if _ITERATOR_DEBUG_LEVEL != 0
-SYSTEM_END
+PRILIB_END
 #include <iterator>
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename T>
 class pointer_iterator : public std::iterator<std::random_access_iterator_tag, T, ptrdiff_t, T*, T&>
 {
@@ -162,6 +162,6 @@ namespace Memory
 			return copyTo(new_<T>(length), from, length);
 	}
 }
-SYSTEM_END
+PRILIB_END
 
 #endif
