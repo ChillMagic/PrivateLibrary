@@ -4,12 +4,12 @@
 // Description:  Basic on 'to_string', using 'printf'.
 
 #pragma once
-#ifndef _SYSTEM_PRINTS_H_
-#define _SYSTEM_PRINTS_H_
+#ifndef _PRILIB_PRINTS_H_
+#define _PRILIB_PRINTS_H_
 #include "macro.h"
 #include <string>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 namespace Convert
 {
 	// Format
@@ -160,6 +160,6 @@ namespace Output
 		exit(-1);
 	}
 }
-SYSTEM_END
+PRILIB_END
 
 #endif

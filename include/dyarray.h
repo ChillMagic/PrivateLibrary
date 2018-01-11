@@ -3,13 +3,13 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_DYARRAY_H_
-#define _SYSTEM_DYARRAY_H_
+#ifndef _PRILIB_DYARRAY_H_
+#define _PRILIB_DYARRAY_H_
 #include "macro.h"
 #include "memory.h"
 #include <cstdio>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename T>
 class dyarray_creater;
 
@@ -133,6 +133,6 @@ private:
 	size_t _count;
 	dyarray<T> _data;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

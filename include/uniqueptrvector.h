@@ -3,12 +3,12 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_UNIQUEPTRVECTOR_H_
-#define _SYSTEM_UNIQUEPTRVECTOR_H_
+#ifndef _PRILIB_UNIQUEPTRVECTOR_H_
+#define _PRILIB_UNIQUEPTRVECTOR_H_
 #include "macro.h"
 #include <vector>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename T, typename Allocator = std::allocator<T*>>
 class UniquePtrVector
 {
@@ -126,6 +126,6 @@ public:
 private:
 	std::vector<T*> data;
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

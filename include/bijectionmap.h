@@ -3,15 +3,15 @@
 // Version:	1.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_BIJECTIONMAP_H_
-#define _SYSTEM_BIJECTIONMAP_H_
+#ifndef _PRILIB_BIJECTIONMAP_H_
+#define _PRILIB_BIJECTIONMAP_H_
 #include "macro.h"
 #include <map>
 #include <vector>
 #include <deque>
 #include <initializer_list>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 template <typename _KTy, typename _VTy>
 class BijectionMap
 {
@@ -375,6 +375,6 @@ private:
 		}
 	}
 };
-SYSTEM_END
+PRILIB_END
 
 #endif

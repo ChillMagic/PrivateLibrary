@@ -3,8 +3,8 @@
 // Version: 2.0.0.0
 
 #pragma once
-#ifndef _SYSTEM_FILE_H_
-#define _SYSTEM_FILE_H_
+#ifndef _PRILIB_FILE_H_
+#define _PRILIB_FILE_H_
 #include "macro.h"
 #include "charptr.h"
 #include "prints.h"
@@ -14,7 +14,7 @@
 #include <list>
 #include <algorithm>
 
-SYSTEM_BEGIN
+PRILIB_BEGIN
 class File
 {
 	using FilePtr = std::shared_ptr<FILE>;
@@ -62,38 +62,6 @@ public:
 		priOpen();
 		return *this;
 	}
-	void write(const void *buffer, size_t elsize, size_t elcount) {
-		fwrite(buffer, elsize, elcount, file.get());
-	}
-	template <typename T>
-	void write(const T *buffer, size_t elcount) {
-		write(buffer, sizeof(T), elcount);
-	}
-	template <typename T>
-	void write(const T &element) {
-		write(&element, 1);
-	}
-	void read(void *buffer, size_t elsize, size_t elcount) {
-		fread(buffer, elsize, elcount, file.get());
-	}
-	template <typename T>
-	void read(T *buffer, size_t elcount) {
-		read(buffer, sizeof(T), elcount);
-	}
-	template <typename T>
-	void read(T &element) {
-		read(&element, 1);
-	}
-
-	template <typename T>
-	bool getft(T &element) {
-		int s = fscanf(file.get(), Convert::format<T>(), &element);
-		return s != EOF && s != 0;
-	}
-	bool getft(char *dst, size_t len) {
-		int s = fscanf(file.get(), "%s", dst);
-		return s != EOF && s != 0;
-	}
 
 	operator FILE*() const {
 		return file.get();
@@ -107,59 +75,11 @@ public:
 	bool eof() const {
 		return feof(file.get()) != 0;
 	}
-	std::string getText() const {
-		if (bad()) return "";
-		FileRecordPost frecpost(file);
-		charptr tmp(size());
-		setPostBegin();
-		fread(tmp, sizeof(char), size(), file.get());
-		return tmp.to_string();
-	}
 	FILE* c_ptr() const {
 		return file.get();
 	}
-	std::string getline() {
-		std::list<std::unique_ptr<char>> strlist;
-		const size_t size = 0x100;
-		size_t length = 0;
-
-		while (true) {
-			strlist.push_back(std::unique_ptr<char>(new char[size]()));
-			char *buffer = strlist.back().get();
-
-			fgets(buffer, size, file.get());
-
-			char c = buffer[size - 2];
-			if (c == '\x00' || c == '\x0A') {
-				size_t i = strlen(buffer) - 1;
-				if (buffer[i] == '\n')
-					buffer[i] = '\0';
-				length += i;
-				break;
-			}
-			else {
-				length += size;
-			}
-		}
-
-		std::string result(length + 1, '\0');
-
-		if (result.empty())
-			return "";
-
-		auto iter = result.begin();
-
-		for (auto &str : strlist) {
-			size_t step = length < size ? length : size;
-			std::copy_n(str.get(), step, iter);
-			iter += step;
-			length -= step;
-		}
-
-		return result;
-	}
-
-private:
+	
+protected:
 	FilePtr file;
 	std::string filename;
 	TBMode tbmode;
@@ -242,6 +162,116 @@ private:
 	}
 #endif
 };
-SYSTEM_END
+
+class TextFile : public File
+{
+public:
+	explicit TextFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
+		: File(filename, File::Text) {}
+	explicit TextFile(const File &file)
+		: File(file) {
+		if (tbmode != File::Text) {
+			this->file = nullptr;
+		}
+	}
+
+	std::string getline() {
+		std::list<std::unique_ptr<char>> strlist;
+		const size_t size = 0x100;
+		size_t length = 0;
+
+		while (true) {
+			strlist.push_back(std::unique_ptr<char>(new char[size]()));
+			char *buffer = strlist.back().get();
+
+			fgets(buffer, size, file.get());
+
+			char c = buffer[size - 2];
+			if (c == '\x00' || c == '\x0A') {
+				size_t i = strlen(buffer) - 1;
+				if (buffer[i] == '\n')
+					buffer[i] = '\0';
+				length += i;
+				break;
+			}
+			else {
+				length += size;
+			}
+		}
+
+		std::string result(length + 1, '\0');
+
+		if (result.empty())
+			return "";
+
+		auto iter = result.begin();
+
+		for (auto &str : strlist) {
+			size_t step = length < size ? length : size;
+			std::copy_n(str.get(), step, iter);
+			iter += step;
+			length -= step;
+		}
+
+		return result;
+	}
+
+	std::string getText() const {
+		if (bad()) return "";
+		FileRecordPost frecpost(file);
+		charptr tmp(size());
+		setPostBegin();
+		fread(tmp, sizeof(char), size(), file.get());
+		return tmp.to_string();
+	}
+
+	template <typename T>
+	bool getft(T &element) {
+		int s = fscanf(file.get(), Convert::format<T>(), &element);
+		return s != EOF && s != 0;
+	}
+	bool getft(char *dst, size_t len) {
+		int s = fscanf(file.get(), "%s", dst);
+		return s != EOF && s != 0;
+	}
+};
+
+class BinaryFile : public File
+{
+public:
+	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
+		: File(filename, File::Text) {}
+	explicit BinaryFile(const File &file)
+		: File(file) {
+		if (tbmode != File::Binary) {
+			this->file = nullptr;
+		}
+	}
+
+	void write(const void *buffer, size_t elsize, size_t elcount) {
+		fwrite(buffer, elsize, elcount, file.get());
+	}
+	template <typename T>
+	void write(const T *buffer, size_t elcount) {
+		write(buffer, sizeof(T), elcount);
+	}
+	template <typename T>
+	void write(const T &element) {
+		write(&element, 1);
+	}
+	void read(void *buffer, size_t elsize, size_t elcount) {
+		fread(buffer, elsize, elcount, file.get());
+	}
+	template <typename T>
+	void read(T *buffer, size_t elcount) {
+		read(buffer, sizeof(T), elcount);
+	}
+	template <typename T>
+	void read(T &element) {
+		read(&element, 1);
+	}
+
+};
+PRILIB_END
 
 #endif
