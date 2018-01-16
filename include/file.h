@@ -24,93 +24,61 @@ public:
 		Binary,    // b
 	};
 	enum RWMode {
-		Read,      // r
-		ReadWrite, // r+
-		OverWrite, // w
-		Create,    // w+
-		WAppend,   // a
-		RWAppend,  // a+
+		Read,          // r
+		Write,         // w
+		Append,        // a
+		ReadWrite,     // r+
+		ReadOverWrite, // w+
+		ReadAppend,    // a+
 	};
 
 public:
-	explicit File(TBMode tbmode = Text, RWMode rwmode = ReadWrite)
-		: tbmode(tbmode), rwmode(rwmode) {}
-	explicit File(const std::string &filename, TBMode tbmode = Text, RWMode rwmode = ReadWrite)
-		: filename(filename), tbmode(tbmode), rwmode(rwmode) {
-		priOpen();
-	}
-	explicit File(FILE *fp, TBMode tbmode = Text, RWMode rwmode = ReadWrite)
-		: file(fp, [](FILE*) {}), tbmode(tbmode), rwmode(rwmode) {}
+	explicit File()
+		: _file(nullptr), _size(0) {}
 
-	File& open(const std::string &filename) {
-		this->filename = filename;
-		priOpen();
+	explicit File(FILE *fp)
+		: _file(fp, [](FILE*) {}) {}
+
+	explicit File(const std::string &filename, TBMode tbmode, RWMode rwmode) {
+		_priOpen(filename, tbmode, rwmode);
+	}
+
+	File& open(const std::string &filename, TBMode tbmode, RWMode rwmode) {
+		_priOpen(filename, tbmode, rwmode);
 		return *this;
 	}
 	File& close() {
-		file = nullptr;
-		return *this;
-	}
-	File& reopen() {
-		close();
-		priOpen();
-		return *this;
-	}
-	File& reopen(RWMode rwmode) {
-		close();
-		this->rwmode = rwmode;
-		priOpen();
+		_file = nullptr;
 		return *this;
 	}
 
 	operator FILE*() const {
-		return file.get();
+		return _file.get();
 	}
 	bool bad() const {
-		return file == nullptr;
+		return _file == nullptr;
 	}
 	size_t size() const {
 		return _size;
 	}
 	bool eof() const {
-		return feof(file.get()) != 0;
+		return feof(_file.get()) != 0;
 	}
 	FILE* c_ptr() const {
-		return file.get();
+		return _file.get();
 	}
-	
+
 protected:
-	FilePtr file;
-	std::string filename;
-	TBMode tbmode;
-	RWMode rwmode;
+	FilePtr _file;
 	size_t _size;
 
-	void priOpen() {
-		const std::string &mode = getMode(tbmode, rwmode);
-		FILE *fp = fopen(filename.c_str(), mode.c_str());
-		if (fp) {
-			file = FilePtr(fp, fclose);
-			setSize();
-		}
+	void _priOpen(const std::string &filename, TBMode tbmode, RWMode rwmode);
+	void _setSize();
+	void _setPostBegin() const {
+		fseek(_file.get(), 0, SEEK_SET);
 	}
-	void setSize() {
-		long size;
-		if (bad()) {
-			size = -1;
-		}
-		else {
-			FileRecordPost frecpost(file);
-			setPostEnd();
-			size = ftell(file.get());
-		}
-		this->_size = static_cast<size_t>(size);
-	}
-	void setPostBegin() const {
-		fseek(file.get(), 0, SEEK_SET);
-	}
-	void setPostEnd() const {
-		fseek(file.get(), 0, SEEK_END);
+	void _setPostEnd() const {
+		fseek(_file.get(), 0, SEEK_END);
 	}
 
 	class FileRecordPost
@@ -127,26 +95,7 @@ protected:
 		const FilePtr &file;
 	};
 
-	static std::string getMode(TBMode tbmode, RWMode rwmode) {
-		std::string str;
-		char tbchar = tbmode == Text ? 't' : 'b';
-		char rwchar;
-		bool appchar = false;
-		switch (rwmode)
-		{
-		case Read: rwchar = 'r'; break;
-		case ReadWrite: rwchar = 'r'; appchar = true; break;
-		case OverWrite: rwchar = 'w'; break;
-		case Create: rwchar = 'w'; appchar = true; break;
-		case WAppend: rwchar = 'a'; break;
-		case RWAppend: rwchar = 'a'; appchar = true; break;
-		}
-		str.push_back(rwchar);
-		str.push_back(tbchar);
-		if (appchar)
-			str.push_back('+');
-		return str;
-	}
+	static void _getMode(char mode[4], TBMode tbmode, RWMode rwmode);
 
 #ifdef _MSC_VER
 	inline static FILE* fopen(const char *filename, const char *mode)
@@ -167,71 +116,22 @@ class TextFile : public File
 {
 public:
 	explicit TextFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
-		: File(filename, File::Text) {}
+		: File(filename, File::Text, rwmode) {}
+
 	explicit TextFile(const File &file)
-		: File(file) {
-		if (tbmode != File::Text) {
-			this->file = nullptr;
-		}
-	}
+		: File(file) {}
 
-	std::string getline() {
-		std::list<std::unique_ptr<char>> strlist;
-		const size_t size = 0x100;
-		size_t length = 0;
+	std::string getline();
 
-		while (true) {
-			strlist.push_back(std::unique_ptr<char>(new char[size]()));
-			char *buffer = strlist.back().get();
-
-			fgets(buffer, size, file.get());
-
-			char c = buffer[size - 2];
-			if (c == '\x00' || c == '\x0A') {
-				size_t i = strlen(buffer) - 1;
-				if (buffer[i] == '\n')
-					buffer[i] = '\0';
-				length += i;
-				break;
-			}
-			else {
-				length += size;
-			}
-		}
-
-		std::string result(length + 1, '\0');
-
-		if (result.empty())
-			return "";
-
-		auto iter = result.begin();
-
-		for (auto &str : strlist) {
-			size_t step = length < size ? length : size;
-			std::copy_n(str.get(), step, iter);
-			iter += step;
-			length -= step;
-		}
-
-		return result;
-	}
-
-	std::string getText() const {
-		if (bad()) return "";
-		FileRecordPost frecpost(file);
-		charptr tmp(size());
-		setPostBegin();
-		fread(tmp, sizeof(char), size(), file.get());
-		return tmp.to_string();
-	}
+	std::string getText() const;
 
 	template <typename T>
 	bool getft(T &element) {
-		int s = fscanf(file.get(), Convert::format<T>(), &element);
+		int s = fscanf(_file.get(), Convert::format<T>(), &element);
 		return s != EOF && s != 0;
 	}
 	bool getft(char *dst, size_t len) {
-		int s = fscanf(file.get(), "%s", dst);
+		int s = fscanf(_file.get(), "%s", dst);
 		return s != EOF && s != 0;
 	}
 };
@@ -240,16 +140,12 @@ class BinaryFile : public File
 {
 public:
 	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
-		: File(filename, File::Text) {}
+		: File(filename, File::Binary, rwmode) {}
 	explicit BinaryFile(const File &file)
-		: File(file) {
-		if (tbmode != File::Binary) {
-			this->file = nullptr;
-		}
-	}
+		: File(file) {}
 
 	void write(const void *buffer, size_t elsize, size_t elcount) {
-		fwrite(buffer, elsize, elcount, file.get());
+		fwrite(buffer, elsize, elcount, _file.get());
 	}
 	template <typename T>
 	void write(const T *buffer, size_t elcount) {
@@ -260,7 +156,7 @@ public:
 		write(&element, 1);
 	}
 	void read(void *buffer, size_t elsize, size_t elcount) {
-		fread(buffer, elsize, elcount, file.get());
+		fread(buffer, elsize, elcount, _file.get());
 	}
 	template <typename T>
 	void read(T *buffer, size_t elcount) {
