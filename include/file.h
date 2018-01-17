@@ -76,11 +76,22 @@ protected:
 class TextFile : public File
 {
 public:
+	explicit TextFile() = default;
+
 	explicit TextFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
 		: File(filename, File::Text, rwmode) {}
 
 	explicit TextFile(const File &file)
 		: File(file) {}
+
+	TextFile& open(const std::string &filename, RWMode rwmode) {
+		File::open(filename, File::Text, rwmode);
+		return *this;
+	}
+	TextFile& close() {
+		File::close();
+		return *this;
+	}
 
 	std::string getline();
 
@@ -101,10 +112,21 @@ private:
 class BinaryFile : public File
 {
 public:
+	explicit BinaryFile() = default;
+
 	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
 		: File(filename, File::Binary, rwmode) {}
 	explicit BinaryFile(const File &file)
 		: File(file) {}
+
+	BinaryFile& open(const std::string &filename, RWMode rwmode) {
+		File::open(filename, File::Binary, rwmode);
+		return *this;
+	}
+	BinaryFile& close() {
+		File::close();
+		return *this;
+	}
 
 	void write(const void *buffer, size_t elsize, size_t elcount);
 	void read(void *buffer, size_t elsize, size_t elcount);

@@ -36,11 +36,10 @@ private:
 	FILE *file;
 };
 
-inline size_t File::size() const {
+size_t File::size() const {
 	return _size;
 }
-
-inline bool File::eof() const {
+bool File::eof() const {
 	return feof(_file.get()) != 0;
 }
 
