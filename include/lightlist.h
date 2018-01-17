@@ -1,6 +1,6 @@
-// Name:	lightlist.h
-// Date:	08/10/2016
-// Version:	1.0.0.0
+// Name:    lightlist.h
+// Date:    08/10/2016
+// Version: 1.0.0.0
 
 #pragma once
 #ifndef _PRILIB_LIGHTLIST_H_

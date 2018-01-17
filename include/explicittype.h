@@ -1,6 +1,6 @@
-// Name:	explicittype.h
-// Date:	09/10/2017
-// Version:	1.0.0.0
+// Name:    explicittype.h
+// Date:    09/10/2017
+// Version: 1.0.0.0
 
 #pragma once
 #ifndef _PRILIB_EXPLICITTYPE_H_
