@@ -1,6 +1,6 @@
-// Name:	uniqueptrvector.h
-// Date:	08/12/2017
-// Version:	1.0.0.0
+// Name:    uniqueptrvector.h
+// Date:    08/12/2017
+// Version: 1.0.0.0
 
 #pragma once
 #ifndef _PRILIB_UNIQUEPTRVECTOR_H_

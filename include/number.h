@@ -1,6 +1,6 @@
-// Name:	number.h
-// Date:	08/09/2016
-// Version:	2.0.0.0
+// Name:    number.h
+// Date:    08/09/2016
+// Version: 2.0.0.0
 
 #pragma once
 #ifndef _PRILIB_NUMBER_H_

@@ -1,9 +1,48 @@
 #include "file.h"
+#include "charptr.h"
+#include <list>
+#include <algorithm>
 
 PRILIB_BEGIN
+#ifdef _MSC_VER
+inline static FILE* fopen(const char *filename, const char *mode)
+{
+	FILE *file;
+	fopen_s(&file, filename, mode);
+	return file;
+}
+template <typename... Args>
+inline static int fscanf(FILE *file, const char *format, Args... args)
+{
+	return fscanf_s(file, format, args...);
+}
+#endif
+
 //========================
 // * File
 //========================
+
+class FileRecordPost
+{
+public:
+	FileRecordPost(FILE *file) : file(file) {
+		fgetpos(file, &recpost);
+	}
+	~FileRecordPost() {
+		fsetpos(file, &recpost);
+	}
+private:
+	fpos_t recpost;
+	FILE *file;
+};
+
+inline size_t File::size() const {
+	return _size;
+}
+
+inline bool File::eof() const {
+	return feof(_file.get()) != 0;
+}
 
 void File::_priOpen(const std::string &filename, TBMode tbmode, RWMode rwmode) {
 	char mode[4];
@@ -21,11 +60,19 @@ void File::_setSize() {
 		size = 0;
 	}
 	else {
-		FileRecordPost frecpost(_file);
+		FileRecordPost frecpost(_file.get());
 		_setPostEnd();
 		size = ftell(_file.get());
 	}
 	this->_size = static_cast<size_t>(size);
+}
+
+inline void File::_setPostBegin() const {
+	fseek(_file.get(), 0, SEEK_SET);
+}
+
+inline void File::_setPostEnd() const {
+	fseek(_file.get(), 0, SEEK_END);
 }
 
 void File::_getMode(char mode[4], TBMode tbmode, RWMode rwmode) {
@@ -102,10 +149,25 @@ std::string TextFile::getline() {
 
 std::string TextFile::getText() const {
 	if (bad()) return "";
-	FileRecordPost frecpost(_file);
+	FileRecordPost frecpost(_file.get());
 	charptr tmp(size());
 	_setPostBegin();
 	fread(tmp, sizeof(char), size(), _file.get());
 	return tmp.to_string();
+}
+inline bool TextFile::_getfmt(const char * fmt, void * dst) {
+	int s = fscanf(_file.get(), fmt, dst);
+	return s != EOF && s != 0;
+}
+
+//========================
+// * BinaryFile
+//========================
+
+inline void BinaryFile::write(const void * buffer, size_t elsize, size_t elcount) {
+	fwrite(buffer, elsize, elcount, _file.get());
+}
+inline void BinaryFile::read(void * buffer, size_t elsize, size_t elcount) {
+	fread(buffer, elsize, elcount, _file.get());
 }
 PRILIB_END
