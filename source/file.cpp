@@ -2,6 +2,7 @@
 #include "charptr.h"
 #include <list>
 #include <algorithm>
+#include <cassert>
 
 PRILIB_BEGIN
 #ifdef _MSC_VER
@@ -10,11 +11,6 @@ inline static FILE* fopen(const char *filename, const char *mode)
 	FILE *file;
 	fopen_s(&file, filename, mode);
 	return file;
-}
-template <typename... Args>
-inline static int fscanf(FILE *file, const char *format, Args... args)
-{
-	return fscanf_s(file, format, args...);
 }
 #endif
 
@@ -143,6 +139,9 @@ std::string TextFile::getline() {
 		length -= step;
 	}
 
+	if (result[0] == '\0')
+		return "";
+
 	return result;
 }
 
@@ -154,8 +153,21 @@ std::string TextFile::getText() const {
 	fread(tmp, sizeof(char), size(), _file.get());
 	return tmp.to_string();
 }
-inline bool TextFile::_getfmt(const char * fmt, void * dst) {
+bool TextFile::getfmt(char *dst, size_t len) {
+#if defined(_MSC_VER)
+	assert(len <= UINT8_MAX);
+	int s = fscanf_s(_file.get(), "%s", dst, static_cast<unsigned>(len));
+	return s != EOF && s != 0;
+#else
+	return _getfmt("%s", dst);
+#endif
+}
+inline bool TextFile::_getfmt(const char *fmt, void *dst) {
+#if defined(_MSC_VER)
+	int s = fscanf_s(_file.get(), fmt, dst);
+#else
 	int s = fscanf(_file.get(), fmt, dst);
+#endif
 	return s != EOF && s != 0;
 }
 

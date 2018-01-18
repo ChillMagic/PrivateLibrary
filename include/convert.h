@@ -7,6 +7,7 @@
 #define _PRILIB_CONVERT_H_
 #include "macro.h"
 #include <string>
+#include <functional>
 
 PRILIB_BEGIN
 namespace Convert
@@ -110,6 +111,11 @@ namespace Convert
 	inline std::string to_hex(uint32_t i) { return to_hex(i, "%08x"); }
 	inline std::string to_hex(int64_t i) { return to_hex(i, "%016llx"); }
 	inline std::string to_hex(uint64_t i) { return to_hex(i, "%016llx"); }
+}
+
+namespace Convert
+{
+	void split(const std::string &token, const std::string &delimit, std::function<void(const char*)> yield);
 }
 PRILIB_END
 

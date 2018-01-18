@@ -285,7 +285,13 @@ public:
 	using mapped_type = _VTy;
 	using value_type = _CPTy;
 public:
-	SerialBijectionMap() {}
+	explicit SerialBijectionMap() {}
+	explicit SerialBijectionMap(const std::initializer_list<_KTy> &keylist) {
+		for (auto &key : keylist) {
+			insert(key);
+		}
+	}
+
 	bool insert(const _KTy &key) {
 		if (findKey(key) != size()) {
 			return false;

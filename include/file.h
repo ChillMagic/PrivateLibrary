@@ -101,9 +101,7 @@ public:
 	bool getfmt(T &element) {
 		return _getfmt(Convert::format<T>(), &element);
 	}
-	bool getfmt(char *dst, size_t len) {
-		return _getfmt("%s", dst);
-	}
+	bool getfmt(char *dst, size_t len);
 
 private:
 	bool _getfmt(const char *fmt, void *dst);
