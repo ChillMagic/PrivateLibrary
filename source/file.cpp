@@ -21,7 +21,7 @@ inline static FILE* fopen(const char *filename, const char *mode)
 class FileRecordPost
 {
 public:
-	FileRecordPost(FILE *file) : file(file) {
+	explicit FileRecordPost(FILE *file) : file(file) {
 		fgetpos(file, &recpost);
 	}
 	~FileRecordPost() {
@@ -113,11 +113,12 @@ std::string TextFile::getline() {
 		fgets(buffer, size, _file.get());
 
 		char c = buffer[size - 2];
-		if (c == '\x00' || c == '\x0A') {
-			size_t i = strlen(buffer) - 1;
-			if (buffer[i] == '\n')
-				buffer[i] = '\0';
-			length += i;
+		if (c == '\0' || c == '\n') {
+			size_t len = strlen(buffer);
+			if (len != 0 && buffer[len - 1] == '\n') {
+				buffer[len - 1] = '\0';
+				length += len - 1;
+			}
 			break;
 		}
 		else {
@@ -125,10 +126,10 @@ std::string TextFile::getline() {
 		}
 	}
 
-	std::string result(length + 1, '\0');
-
-	if (result.empty())
+	if (length == 0)
 		return "";
+
+	std::string result(length, '\0'); // The std::string end without '\0'
 
 	auto iter = result.begin();
 
@@ -138,9 +139,6 @@ std::string TextFile::getline() {
 		iter += step;
 		length -= step;
 	}
-
-	if (result[0] == '\0')
-		return "";
 
 	return result;
 }
