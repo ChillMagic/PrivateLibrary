@@ -115,6 +115,35 @@ namespace Convert
 
 namespace Convert
 {
+	bool to_ll(const std::string &str, long long &result, int base = 10);
+	bool to_ull(const std::string &str, unsigned long long &result, int base = 10);
+
+	template <typename T>
+	bool to_integer(const std::string &str, T &result, int base = 10) {
+		T min = std::numeric_limits<T>::min();
+		T max = std::numeric_limits<T>::max();
+		if (std::numeric_limits<T>::is_signed) {
+			long long res;
+			if (!to_ll(str, res, base))
+				return false;
+			if (res > max || res < min)
+				return false;
+			result = static_cast<T>(res);
+		}
+		else {
+			unsigned long long res;
+			if (!to_ull(str, res, base))
+				return false;
+			if (res > max)
+				return false;
+			result = static_cast<T>(res);
+		}
+		return true;
+	}
+}
+
+namespace Convert
+{
 	void split(const std::string &token, const std::string &delimit, std::function<void(const char*)> yield);
 }
 PRILIB_END

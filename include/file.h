@@ -78,6 +78,9 @@ class TextFile : public File
 public:
 	explicit TextFile() = default;
 
+	explicit TextFile(FILE *fp)
+		: File(fp) {}
+
 	explicit TextFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
 		: File(filename, File::Text, rwmode) {}
 
@@ -111,6 +114,9 @@ class BinaryFile : public File
 {
 public:
 	explicit BinaryFile() = default;
+
+	explicit BinaryFile(FILE *fp)
+		: File(fp) {}
 
 	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
 		: File(filename, File::Binary, rwmode) {}
