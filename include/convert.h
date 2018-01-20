@@ -8,6 +8,7 @@
 #include "macro.h"
 #include <string>
 #include <functional>
+#include <limits>
 
 PRILIB_BEGIN
 namespace Convert
