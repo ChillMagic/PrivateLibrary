@@ -7,7 +7,6 @@
 #define _PRILIB_DLLLOADER_H_
 #include "macro.h"
 #include <memory>
-#include <type_traits>
 
 #define S_WINDOWS 1
 #define S_LINUX   2
@@ -18,101 +17,63 @@
 #	define SYSTEM_PLATFORM S_LINUX
 #endif
 
-#if SYSTEM_PLATFORM == S_WINDOWS
-#	include <Windows.h>
-#elif SYSTEM_PLATFORM == S_LINUX
-#	include <dlfcn.h>
-#endif
-
 PRILIB_BEGIN
 class DLLLoader
 {
 public:
-
 #if SYSTEM_PLATFORM == S_WINDOWS
-	using DLLPointer = HINSTANCE;
-	using ErrorCode = DWORD;
+	using ErrorCode = unsigned long;
+	using Mode = int;
 #	ifdef UNICODE
-	using Path = LPCWSTR;
+	using Path = const wchar_t *;
 #	else
-	using Path = LPCSTR;
+	using Path = const char *;
 #	endif
 #elif SYSTEM_PLATFORM == S_LINUX
-	using DLLPointer = void*;
 	using ErrorCode = const char *;
-	using Path = const char*;
+	using Path = const char *;
+	enum Mode {
+		Lazy,
+		Now,
+		Global,
+		Local
+	};
+#else
+#	error
 #endif
-	using DLLData = typename std::remove_pointer<DLLPointer>::type;
 
-	DLLLoader() : _errcode((ErrorCode)(0)) {}
+public:
+	class DLLPointer;
 
-	explicit DLLLoader(Path name, int flag = 0)
-		: data(dllcreate(name, flag, _errcode), DLLLoader::dllclose) {}
+public:
+	explicit DLLLoader();
+#if SYSTEM_PLATFORM == S_WINDOWS
+	explicit DLLLoader(Path path, Mode flag = 0);
+	void open(Path name, Mode flag = 0);
+#elif SYSTEM_PLATFORM == S_LINUX
+	explicit DLLLoader(Path path, Mode flag = Lazy);
+	void open(Path name, Mode flag = Lazy);
+#endif
 
-	void open(Path name, int flag = 0) {
-		DLLPointer ptr = dllcreate(name, flag, _errcode);
-		this->data = std::shared_ptr<DLLData>(ptr, DLLLoader::dllclose);
-	}
-	void close() {
-		this->data = nullptr;
+	void close();
+	bool bad() const {
+		return _data == nullptr;
 	}
 
 	template <typename T = void>
 	T* get(const char *func_name) const {
-		return reinterpret_cast<T*>(DLLLoader::dllgetfunc(data.get(), func_name));
+		return reinterpret_cast<T*>(_get(func_name));
 	}
 
-	bool bad() const {
-		return data == nullptr;
-	}
 	ErrorCode errcode() const {
 		return _errcode;
 	}
 
 private:
-
-	static DLLPointer dllcreate(Path name, int flag, ErrorCode &errcode) {
-		bool error = false;
-		errcode = (ErrorCode)(0);
-
-#if SYSTEM_PLATFORM == S_WINDOWS
-		auto ptr = LoadLibrary(name);
-		if (ptr == nullptr) {
-			error = true;
-			errcode = GetLastError();
-		}
-#elif SYSTEM_PLATFORM == S_LINUX
-		auto ptr = dlopen(name, flag);
-		if (ptr == nullptr || (errcode = dlerror()) != nullptr) {
-			error = true;
-			errcode = dlerror();
-		}
-#endif
-
-		return error ? nullptr : ptr;
-	}
-
-	static void dllclose(DLLPointer data) {
-		if (data == nullptr) return;
-
-#if SYSTEM_PLATFORM == S_WINDOWS
-		FreeLibrary(data);
-#elif SYSTEM_PLATFORM == S_LINUX
-		dlclose(data);
-#endif
-	}
-
-	static void* dllgetfunc(DLLPointer data, const char *func_name) {
-#if SYSTEM_PLATFORM == S_WINDOWS
-		return (void*)GetProcAddress(data, func_name);
-#elif SYSTEM_PLATFORM == S_LINUX
-		return dlsym(data, func_name);
-#endif
-	}
-
-private:
-	std::shared_ptr<DLLData> data;
+	std::shared_ptr<DLLPointer> _data;
 	ErrorCode _errcode;
+
+	void* _get(const char *func_name) const;
 };
 PRILIB_END
 
