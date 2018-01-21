@@ -1,6 +1,5 @@
-// Name:    charptr.h
-// Date:    06/15/2016
-// Version: 2.1.0.0
+// charptr.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_CHARPTR_H_

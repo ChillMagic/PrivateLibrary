@@ -1,7 +1,6 @@
-// Name:         prints.h
-// Date:         06/16/2016
-// Version:      2.1.0.0
-// Description:  Basic on 'to_string', using 'printf'.
+// prints.h
+// * PrivateLibrary
+// * Description:  Basic on 'to_string', using 'printf'.
 
 #pragma once
 #ifndef _PRILIB_PRINTS_H_

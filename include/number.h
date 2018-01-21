@@ -1,6 +1,5 @@
-// Name:    number.h
-// Date:    08/09/2016
-// Version: 2.0.0.0
+// number.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_NUMBER_H_

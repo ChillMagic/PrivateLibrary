@@ -1,6 +1,5 @@
-// Name:    indextable.h
-// Date:    12/15/2016
-// Version: 1.0.0.0
+// indextable.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_INDEXTABLE_H_

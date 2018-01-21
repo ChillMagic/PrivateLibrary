@@ -1,6 +1,5 @@
-// Name:    bijectionmap.h
-// Date:    08/29/2016
-// Version: 1.0.0.0
+// bijectionmap.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_BIJECTIONMAP_H_

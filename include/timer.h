@@ -1,6 +1,5 @@
-// Name:    timer.h
-// Date:    11/05/2016
-// Version: 1.0.0.0
+// timer.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_TIMER_H_

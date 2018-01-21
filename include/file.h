@@ -1,6 +1,5 @@
-// Name:    file.h
-// Date:    08/25/2016
-// Version: 2.0.0.0
+// file.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_FILE_H_

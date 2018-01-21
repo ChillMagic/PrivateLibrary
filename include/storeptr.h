@@ -1,6 +1,5 @@
-// Name:    storeptr.h
-// Date:    01/17/2018
-// Version: 1.0.0.0
+// storeptr.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_STOREPTR_H_

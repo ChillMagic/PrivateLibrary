@@ -1,6 +1,5 @@
-// Name:    record.h
-// Date:    01/19/2018
-// Version: 1.0.0.0
+// record.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_RECORD_H_
