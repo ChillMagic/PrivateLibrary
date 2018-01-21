@@ -1,6 +1,5 @@
-// Name:    ffifunc.h
-// Date:    09/15/2017
-// Version: 1.0.0.0
+// ffifunc.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_FFIFUNC_H_

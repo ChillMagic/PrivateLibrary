@@ -1,6 +1,5 @@
-// Name:    random.h
-// Date:    07/07/2017
-// Version: 1.0.0.0
+// random.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_RANDOM_H_

@@ -1,6 +1,5 @@
-// Name:    dllloader.h
-// Date:    09/04/2017
-// Version: 1.0.0.0
+// dllloader.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_DLLLOADER_H_

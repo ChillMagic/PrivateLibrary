@@ -1,6 +1,5 @@
-// Name:    lightlist.h
-// Date:    08/10/2016
-// Version: 1.0.0.0
+// lightlist.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_LIGHTLIST_H_

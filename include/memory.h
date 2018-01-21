@@ -1,6 +1,5 @@
-// Name:    memory.h
-// Date:    06/14/2016
-// Version: 2.0.0.0
+// memory.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_MEMORY_H_

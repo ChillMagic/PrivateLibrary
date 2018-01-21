@@ -1,6 +1,5 @@
-// Name:    convert.h
-// Date:    01/17/2018
-// Version: 1.0.0.0
+// convert.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_CONVERT_H_

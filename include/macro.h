@@ -1,6 +1,5 @@
-// Name:    macro.h
-// Date:    08/10/2015
-// Version: 1.1.0.0
+// macro.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef PRILIB

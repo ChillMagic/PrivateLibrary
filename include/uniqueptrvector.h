@@ -1,6 +1,5 @@
-// Name:    uniqueptrvector.h
-// Date:    08/12/2017
-// Version: 1.0.0.0
+// uniqueptrvector.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_UNIQUEPTRVECTOR_H_

@@ -1,6 +1,5 @@
-// Name:    bytepool.h
-// Date:    12/06/2016
-// Version: 1.0.0.0
+// bytepool.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_BYTEPOOL_H_

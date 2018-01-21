@@ -1,6 +1,5 @@
-// Name:    dyarray.h
-// Date:    07/20/2017
-// Version: 1.0.0.0
+// dyarray.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_DYARRAY_H_

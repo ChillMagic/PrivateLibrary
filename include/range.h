@@ -1,6 +1,5 @@
-// Name:    range.h
-// Date:    06/14/2016
-// Version: 2.0.0.0
+// range.h
+// * PrivateLibrary
 
 #pragma once
 #ifndef _PRILIB_RANGE_H_
