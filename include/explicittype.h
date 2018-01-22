@@ -22,6 +22,8 @@ public:
 	explicit ExplicitType(_Ty &&data)
 		: data(data) {}
 
+	explicit ExplicitType() {}
+
 	_Ty data;
 };
 
@@ -35,7 +37,7 @@ public:
 	explicit ExplicitType(_Ty &&data)
 		: ExplicitType<_Ty>(data) {}
 
-	ExplicitType()
+	explicit ExplicitType()
 		: ExplicitType<_Ty>(_DfV) {}
 };
 PRILIB_END

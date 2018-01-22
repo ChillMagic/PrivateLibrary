@@ -107,18 +107,19 @@ std::string TextFile::getline() {
 	size_t length = 0;
 
 	while (true) {
-		strlist.push_back(std::unique_ptr<char>(new char[size]()));
+		strlist.push_back(std::unique_ptr<char>(new char[size + 1]()));
 		char *buffer = strlist.back().get();
 
-		fgets(buffer, size, _file.get());
+		fgets(buffer, size + 1, _file.get());
 
-		char c = buffer[size - 2];
+		// Line:
+		//  Linux:   \n
+		//  Windows: \r\n
+
+		char c = buffer[size - 1];
 		if (c == '\0' || c == '\n') {
 			size_t len = strlen(buffer);
-			if (len != 0 && buffer[len - 1] == '\n') {
-				buffer[len - 1] = '\0';
-				length += len - 1;
-			}
+			length += len;
 			break;
 		}
 		else {
@@ -130,15 +131,23 @@ std::string TextFile::getline() {
 		return "";
 
 	std::string result(length, '\0'); // The std::string end without '\0'
+	size_t reclen = length;
 
 	auto iter = result.begin();
 
 	for (auto &str : strlist) {
-		size_t step = length < size ? length : size;
+		size_t step = reclen < size ? reclen : size;
 		std::copy_n(str.get(), step, iter);
 		iter += step;
-		length -= step;
+		reclen -= step;
 	}
+
+	if (result[length - 1] == '\n')
+		result[length - 1] = '\0';
+	if (length >= 2 && result[length - 2] == '\r')
+		result[length - 2] = '\0';
+
+	return result.c_str(); // Remove '\0'
 
 	return result;
 }
