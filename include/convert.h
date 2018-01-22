@@ -126,7 +126,7 @@ namespace Convert
 			long long res;
 			if (!to_ll(str, res, base))
 				return false;
-			if (res > max || res < min)
+			if (res > static_cast<long long>(max) || res < static_cast<long long>(min))
 				return false;
 			result = static_cast<T>(res);
 		}
@@ -134,11 +134,23 @@ namespace Convert
 			unsigned long long res;
 			if (!to_ull(str, res, base))
 				return false;
-			if (res > max)
+			if (res > static_cast<unsigned long long>(max))
 				return false;
 			result = static_cast<T>(res);
 		}
 		return true;
+	}
+
+	template <typename T>
+	T to_integer(const std::string &str, std::function<void()> errfunc, int base = 10) {
+		T result;
+		if (to_integer(str, result, base)) {
+			return result;
+		}
+		else {
+			errfunc();
+			return 0;
+		}
 	}
 }
 
