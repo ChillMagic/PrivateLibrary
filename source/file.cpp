@@ -102,15 +102,15 @@ void File::_getMode(char mode[4], TBMode tbmode, RWMode rwmode) {
 //========================
 
 std::string TextFile::getline() {
-	std::list<std::unique_ptr<char>> strlist;
+	std::list<charptr> strlist;
 	const size_t size = 0x100;
 	size_t length = 0;
 
 	while (true) {
-		strlist.push_back(std::unique_ptr<char>(new char[size + 1]()));
-		char *buffer = strlist.back().get();
+		strlist.push_back(charptr(size));
+		charptr &buffer = strlist.back();
 
-		fgets(buffer, size + 1, _file.get());
+		fgets(buffer.get(), size + 1, _file.get());
 
 		// Line:
 		//  Linux:   \n
@@ -118,8 +118,7 @@ std::string TextFile::getline() {
 
 		char c = buffer[size - 1];
 		if (c == '\0' || c == '\n') {
-			size_t len = strlen(buffer);
-			length += len;
+			length += buffer.length();
 			break;
 		}
 		else {
@@ -130,26 +129,25 @@ std::string TextFile::getline() {
 	if (length == 0)
 		return "";
 
-	std::string result(length, '\0'); // The std::string end without '\0'
+	charptr result(length); // The std::string end without '\0'
 	size_t reclen = length;
 
-	auto iter = result.begin();
+	auto iter = result.get();
 
 	for (auto &str : strlist) {
 		size_t step = reclen < size ? reclen : size;
-		std::copy_n(str.get(), step, iter);
+		std::memcpy(iter, str.get(), step);
 		iter += step;
 		reclen -= step;
 	}
 
+	// Remove \n, \r
 	if (result[length - 1] == '\n')
 		result[length - 1] = '\0';
 	if (length >= 2 && result[length - 2] == '\r')
 		result[length - 2] = '\0';
 
-	return result.c_str(); // Remove '\0'
-
-	return result;
+	return result.get(); // Remove '\0
 }
 
 std::string TextFile::getText() const {
