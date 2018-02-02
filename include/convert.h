@@ -111,6 +111,8 @@ namespace Convert
 	inline std::string to_hex(uint32_t i) { return to_hex(i, "%08x"); }
 	inline std::string to_hex(int64_t i) { return to_hex(i, "%016llx"); }
 	inline std::string to_hex(uint64_t i) { return to_hex(i, "%016llx"); }
+
+	std::string to_hex(void *src, size_t size);
 }
 
 namespace Convert
@@ -118,6 +120,19 @@ namespace Convert
 	bool to_ll(const std::string &str, long long &result, int base = 10);
 	bool to_ull(const std::string &str, unsigned long long &result, int base = 10);
 	bool to_base16(const std::string &str, void *dst, size_t size = 0, size_t msize = 0); // lsb : msize = 0, msb : msize > 0
+
+	bool is_integer(char c, int base = 10);
+	bool is_integer(const std::string &str, int base = 10);
+
+	bool to_integer(char c, int &result, int base = 10);
+	template <typename T>
+	bool to_integer(char c, T &result, int base = 10) {
+		int r;
+		bool s = to_integer(c, r, base);
+		if (s)
+			result = static_cast<T>(r);
+		return s;
+	}
 
 	template <typename T>
 	bool to_integer(const std::string &str, T &result, int base = 10) {
@@ -142,10 +157,10 @@ namespace Convert
 		return true;
 	}
 
-	template <typename T>
-	T to_integer(const std::string &str, std::function<void()> errfunc, int base = 10) {
+	template <typename T, typename ST>
+	T to_integer(const ST &src, std::function<void()> errfunc, int base = 10) {
 		T result;
-		if (to_integer(str, result, base)) {
+		if (to_integer(src, result, base)) {
 			return result;
 		}
 		else {
