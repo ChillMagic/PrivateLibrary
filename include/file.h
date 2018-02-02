@@ -80,7 +80,7 @@ public:
 	explicit TextFile(FILE *fp)
 		: File(fp) {}
 
-	explicit TextFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
+	explicit TextFile(const std::string &filename, File::RWMode rwmode = Read)
 		: File(filename, File::Text, rwmode) {}
 
 	explicit TextFile(const File &file)
@@ -117,7 +117,7 @@ public:
 	explicit BinaryFile(FILE *fp)
 		: File(fp) {}
 
-	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = ReadWrite)
+	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = Read)
 		: File(filename, File::Binary, rwmode) {}
 	explicit BinaryFile(const File &file)
 		: File(file) {}
