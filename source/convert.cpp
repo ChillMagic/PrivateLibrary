@@ -52,18 +52,23 @@ namespace Convert
 		return false;
 	}
 
-	bool to_base16(const std::string &str, void *dst, size_t size) {
+	bool to_base16(const std::string &str, void *dst, size_t size, size_t msize) {
 		if (str.empty())
 			return false;
 
+		bool islsb = msize == 0;
 		bool isresize = size == 0;
 
 		const size_t strsize = str.size();
 		if (isresize)
 			size = strsize / 2 + strsize % 2;
 
-		for (size_t i = 0; i < std::min(strsize / 2, size); ++i) {
-			auto &d = reinterpret_cast<uint8_t*>(dst)[i];
+		if (!islsb && (size > msize))
+			size = msize;
+
+		size_t i;
+		for (i = 0; i < std::min(strsize / 2, size); ++i) {
+			auto &d = reinterpret_cast<uint8_t*>(dst)[islsb ? i : (msize - i - 1)];
 			size_t si = strsize - i * 2 - 2;
 			char higher = str[si];
 			char lower = str[si + 1];
@@ -71,8 +76,8 @@ namespace Convert
 				return false;
 		}
 
-		if ((isresize || (!isresize && size > strsize / 2)) && (strsize % 2 != 0)) {
-			if (!to_base16(str[0], reinterpret_cast<uint8_t*>(dst)[strsize / 2]))
+		if ((isresize || (!isresize && size > strsize / 2)) && (strsize % 2 != 0 && (islsb || (!islsb && msize > i)))) {
+			if (!to_base16(str[0], reinterpret_cast<uint8_t*>(dst)[islsb ? i : (msize - i - 1)]))
 				return false;
 		}
 		return true;
