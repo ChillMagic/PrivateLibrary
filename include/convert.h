@@ -117,6 +117,7 @@ namespace Convert
 {
 	bool to_ll(const std::string &str, long long &result, int base = 10);
 	bool to_ull(const std::string &str, unsigned long long &result, int base = 10);
+	bool to_base16(const std::string &str, void *dst, size_t size = 0);
 
 	template <typename T>
 	bool to_integer(const std::string &str, T &result, int base = 10) {
