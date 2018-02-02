@@ -13,7 +13,6 @@
 #include "include/dllloader.h"
 #include "include/dyarray.h"
 #include "include/explicittype.h"
-#include "include/ffifunc.h"
 #include "include/file.h"
 #include "include/indextable.h"
 #include "include/lightlist.h"
