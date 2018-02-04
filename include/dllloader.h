@@ -45,7 +45,7 @@ public:
 	class DLLPointer;
 
 public:
-	explicit DLLLoader();
+	explicit DLLLoader() = default;
 #if SYSTEM_PLATFORM == S_WINDOWS
 	explicit DLLLoader(Path path, Mode flag = 0);
 	void open(Path name, Mode flag = 0);
