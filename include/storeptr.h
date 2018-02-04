@@ -22,6 +22,10 @@ public:
 		return *_data;
 	}
 
+	T* operator->() const {
+		return _data.get();
+	}
+
 private:
 	std::shared_ptr<T> _data;
 };

@@ -105,6 +105,11 @@ void DLLLoader::open(DLLLoader::Path name, Mode flag) {
 	this->_data = std::shared_ptr<DLLPointer>(ptr, dllclose);
 }
 
+void DLLLoader::close() {
+	dllclose(_data.get());
+	this->_data = nullptr;
+}
+
 void* DLLLoader::_get(const char *func_name) const {
 	return reinterpret_cast<void*>(dllgetfunc(*_data, func_name));
 }
