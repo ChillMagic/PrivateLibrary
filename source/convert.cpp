@@ -7,12 +7,12 @@
 PRILIB_BEGIN
 namespace Convert
 {
-	std::string to_hex(void *src, size_t size)
+	std::string to_hex(const void *src, size_t size)
 	{
 		charptr result(3 * size + 10);
 
-		byte *begin = reinterpret_cast<byte*>(src);
-		byte *end = begin + size;
+		const byte *begin = reinterpret_cast<const byte*>(src);
+		const byte *end = begin + size;
 		char *rp = result;
 
 		for (auto ptr : range(begin, end)) {

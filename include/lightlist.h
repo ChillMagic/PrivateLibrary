@@ -78,6 +78,12 @@ public:
 	size_t size() const { return _capacity; }
 	bool empty() const { return _capacity == 0; }
 	void resize(size_t nsize) { _capacity = std::min(_capacity, nsize); }
+	void recapacity(size_t ncapacity) {
+		size_t c = std::max(_capacity, ncapacity);
+		lightlist nl(c);
+		Memory::copyTo(nl.data.get(), data.get(), _capacity);
+		*this = nl;
+	}
 
 private:
 	size_t _capacity = 0;
