@@ -112,7 +112,7 @@ namespace Convert
 	inline std::string to_hex(int64_t i) { return to_hex(i, "%016llx"); }
 	inline std::string to_hex(uint64_t i) { return to_hex(i, "%016llx"); }
 
-	std::string to_hex(void *src, size_t size);
+	std::string to_hex(const void *src, size_t size);
 }
 
 namespace Convert
