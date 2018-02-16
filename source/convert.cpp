@@ -143,21 +143,40 @@ namespace Convert
 	}
 }
 
-void Convert::split(const std::string & token, const std::string & delimit, std::function<void(const char*)> yield)
+void Convert::split(const std::string &token, const std::string &delimit, std::function<void(const char *)> yield, bool remain, bool lastremain)
 {
-#if (defined(_MSC_VER))
-	auto _strtok = strtok_s;
-#else
-	auto _strtok = strtok_r;
-#endif
-	char *saveptr;
-	char *p;
-	charptr buffer(token);
+	charptr buffer(token + (lastremain ? "," : ""));
+	if (remain) {
+		char *p = buffer.get();
+		char *saveptr = p;
 
-	p = _strtok(buffer, delimit.c_str(), &saveptr);
-	while (p) {
-		yield(p);
-		p = _strtok(nullptr, delimit.c_str(), &saveptr);
+		while (*p) {
+			if (delimit.find(*p) != delimit.npos) {
+				*p = '\0';
+				yield(saveptr);
+				saveptr = p + 1;
+			}
+			p++;
+		}
+		if (saveptr != p) {
+			yield(saveptr);
+		}
+	}
+	else {
+#if (defined(_MSC_VER))
+		auto _strtok = strtok_s;
+#else
+		auto _strtok = strtok_r;
+#endif
+		char *saveptr;
+		char *p;
+		charptr buffer(token);
+
+		p = _strtok(buffer, delimit.c_str(), &saveptr);
+		while (p) {
+			yield(p);
+			p = _strtok(nullptr, delimit.c_str(), &saveptr);
+		}
 	}
 }
 PRILIB_END
