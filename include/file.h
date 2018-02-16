@@ -104,6 +104,8 @@ public:
 	}
 	bool getfmt(char *dst, size_t len);
 
+	void write(const std::string &str);
+
 private:
 	bool _getfmt(const char *fmt, void *dst);
 };

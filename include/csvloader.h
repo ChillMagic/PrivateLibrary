@@ -75,6 +75,17 @@ namespace PriLib
 		auto end() const {
 			return _data.end();
 		}
+
+		void save(TextFile &output) const {
+			for (auto &dat : _data) {
+				for (size_t i = 0; i != dat.size(); ++i) {
+					if (i != 0)
+						output.write(",");
+					output.write(dat[i]);
+				}
+				output.write("\n");
+			}
+		}
 	
 	private:
 		std::vector<std::vector<std::string>> _data;
