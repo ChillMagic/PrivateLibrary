@@ -187,6 +187,10 @@ inline bool TextFile::_getfmt(const char *fmt, void *dst) {
 	return s != EOF && s != 0;
 }
 
+void TextFile::write(const std::string &str) {
+	fputs(str.c_str(), _file.get());
+}
+
 //========================
 // * BinaryFile
 //========================
