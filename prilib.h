@@ -10,6 +10,7 @@
 #include "include/bytepool.h"
 #include "include/charptr.h"
 #include "include/convert.h"
+#include "include/csvloader.h"
 #include "include/dllloader.h"
 #include "include/dyarray.h"
 #include "include/explicittype.h"

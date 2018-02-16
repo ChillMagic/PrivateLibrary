@@ -172,7 +172,17 @@ namespace Convert
 
 namespace Convert
 {
-	void split(const std::string &token, const std::string &delimit, std::function<void(const char*)> yield);
+	//   a,b  -> a b
+	// remain : false
+	//   a,,, -> a
+	// remain : true
+	//   a,,  -> a \0
+	//   a,,b -> a \0 b
+	//  lastremain : true
+	//   a,b, -> a b \0
+	//  lastremain : false
+	//   a,b, -> a b
+	void split(const std::string &token, const std::string &delimit, std::function<void(const char*)> yield, bool remain = false, bool lastremain = false);
 }
 PRILIB_END
 

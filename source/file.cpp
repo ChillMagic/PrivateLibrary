@@ -32,10 +32,21 @@ private:
 	FILE *file;
 };
 
+
+File::File(FILE *fp, bool exclusive) {
+	if (exclusive) {
+		_file = FilePtr(fp, fclose);
+	}
+	else {
+		_file = FilePtr(fp, [](FILE*) {});
+	}
+}
+
 size_t File::size() const {
 	return _size;
 }
 bool File::eof() const {
+	assert(!bad());
 	return feof(_file.get()) != 0;
 }
 

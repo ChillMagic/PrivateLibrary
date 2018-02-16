@@ -31,8 +31,7 @@ public:
 	explicit File()
 		: _file(nullptr), _size(0) {}
 
-	explicit File(FILE *fp)
-		: _file(fp, [](FILE*) {}) {}
+	explicit File(FILE *fp, bool exclusive = false);
 
 	explicit File(const std::string &filename, TBMode tbmode, RWMode rwmode) {
 		_priOpen(filename, tbmode, rwmode);
@@ -77,8 +76,8 @@ class TextFile : public File
 public:
 	explicit TextFile() = default;
 
-	explicit TextFile(FILE *fp)
-		: File(fp) {}
+	explicit TextFile(FILE *fp, bool exclusive = false)
+		: File(fp, exclusive) {}
 
 	explicit TextFile(const std::string &filename, File::RWMode rwmode = Read)
 		: File(filename, File::Text, rwmode) {}
@@ -114,8 +113,8 @@ class BinaryFile : public File
 public:
 	explicit BinaryFile() = default;
 
-	explicit BinaryFile(FILE *fp)
-		: File(fp) {}
+	explicit BinaryFile(FILE *fp, bool exclusive = false)
+		: File(fp, exclusive) {}
 
 	explicit BinaryFile(const std::string &filename, File::RWMode rwmode = Read)
 		: File(filename, File::Binary, rwmode) {}
