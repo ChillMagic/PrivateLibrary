@@ -7,20 +7,11 @@
 #include "macro.h"
 #include <memory>
 
-#define S_WINDOWS 1
-#define S_LINUX   2
-
-#if (defined _WIN32)
-#	define SYSTEM_PLATFORM S_WINDOWS
-#elif (defined __linux__)
-#	define SYSTEM_PLATFORM S_LINUX
-#endif
-
 PRILIB_BEGIN
 class DLLLoader
 {
 public:
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	using ErrorCode = unsigned long;
 	using Mode = int;
 #	ifdef UNICODE
@@ -28,7 +19,7 @@ public:
 #	else
 	using Path = const char *;
 #	endif
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	using ErrorCode = const char *;
 	using Path = const char *;
 	enum Mode {

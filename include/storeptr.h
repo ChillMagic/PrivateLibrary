@@ -26,6 +26,10 @@ public:
 		return _data.get();
 	}
 
+	void clear() {
+		_data = nullptr;
+	}
+
 private:
 	std::shared_ptr<T> _data;
 };

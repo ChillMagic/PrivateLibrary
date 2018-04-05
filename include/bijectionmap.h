@@ -101,6 +101,7 @@ public:
 		for (const value_type &e : il)
 			insert(e.first, e.second);
 	}
+
 	iterator insert(const _KTy &key, const _VTy &val) {
 		if (findKey(key) != size() || findValue(val) != size()) {
 			return end();
@@ -123,6 +124,20 @@ public:
 			destroyable.pop_front();
 		}
 		return result;
+	}
+	iterator insert_update(const _KTy &key, const _VTy &val) {
+		size_t id;
+		if ((id = findKey(key)) != size()) {
+			getData(id).second = val;
+			return begin() + id;
+		}
+		else if ((id = findValue(val)) != size()) {
+			getData(id).first = key;
+			return begin() + id;
+		}
+		else {
+			return insert(key, val);
+		}
 	}
 	size_t currentIndex() const {
 		return destroyable.empty() ? currcount : destroyable.front();
