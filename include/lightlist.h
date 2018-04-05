@@ -17,6 +17,7 @@ template <typename T>
 class lightlist
 {
 public:
+	using value_type = T;
 	using iterator = T*;
 	using creater = lightlist_creater<T>;
 public:
