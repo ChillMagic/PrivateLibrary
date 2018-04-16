@@ -4,18 +4,9 @@
 #include <type_traits>
 #include <string>
 
-#define S_WINDOWS 1
-#define S_LINUX   2
-
-#if (defined _WIN32)
-#	define SYSTEM_PLATFORM S_WINDOWS
-#elif (defined __linux__)
-#	define SYSTEM_PLATFORM S_LINUX
-#endif
-
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 #	include <Windows.h>
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 #	include <dlfcn.h>
 #endif
 
@@ -23,10 +14,10 @@ PRILIB_BEGIN
 class DLLLoader::DLLPointer
 {
 public:
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	using Pointer = HINSTANCE;
 	using Data = typename std::remove_pointer<Pointer>::type;
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	using Pointer = void*;
 	using Data = void;
 #endif
@@ -46,13 +37,13 @@ static DLLLoader::DLLPointer* dllcreate(DLLLoader::Path name, DLLLoader::Mode fl
 	bool error = false;
 	errcode = (DLLLoader::ErrorCode)(0);
 
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	auto ptr = LoadLibrary(name);
 	if (ptr == nullptr) {
 		error = true;
 		errcode = GetLastError();
 	}
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	int nflag;
 	switch (flag) {
 	case DLLLoader::Mode::Lazy: nflag = RTLD_LAZY; break;
@@ -79,17 +70,17 @@ static void dllclose(DLLLoader::DLLPointer *_data) {
 
 	if (data == nullptr) return;
 
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	FreeLibrary(data);
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	dlclose(data);
 #endif
 }
 
 static void* dllgetfunc(DLLLoader::DLLPointer data, const char *func_name) {
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	return (void*)GetProcAddress(data, func_name);
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	return dlsym(data, func_name);
 #endif
 }
