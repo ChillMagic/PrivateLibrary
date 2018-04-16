@@ -37,10 +37,10 @@ public:
 
 public:
 	explicit DLLLoader() = default;
-#if SYSTEM_PLATFORM == S_WINDOWS
+#if (PRILIB_OS == PRILIB_OS_WINDOWS)
 	explicit DLLLoader(Path path, Mode flag = 0);
 	void open(Path name, Mode flag = 0);
-#elif SYSTEM_PLATFORM == S_LINUX
+#elif (PRILIB_OS == PRILIB_OS_LINUX)
 	explicit DLLLoader(Path path, Mode flag = Lazy);
 	void open(Path name, Mode flag = Lazy);
 #endif
