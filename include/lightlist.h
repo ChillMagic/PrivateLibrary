@@ -25,8 +25,12 @@ public:
 	lightlist(const lightlist &) = default;
 
 	explicit lightlist(size_t capacity)
+		: lightlist(capacity, Memory::alloc<T>, Memory::free<T>) {}
+
+	template <typename AFTy, typename FFTy>
+	explicit lightlist(size_t capacity, AFTy alloc, FFTy free)
 		// This means lightlist can be used for value type (have no destructor).
-		: _capacity(capacity), data(Memory::alloc<T>(_capacity), Memory::free<T>) {}
+		: _capacity(capacity), data(alloc(_capacity), free) {}
 
 	explicit lightlist(const std::initializer_list<T> &il)
 		: lightlist(il.begin(), il.end()) {}
