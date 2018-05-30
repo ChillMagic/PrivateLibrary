@@ -84,6 +84,10 @@ namespace Memory
 	inline T* alloc(size_t length) {
 		return (T*)std::malloc(length * sizeof(T));
 	}
+	template <typename T = byte>
+	inline T* calloc(size_t length) {
+		return (T*)std::calloc(length * sizeof(T), 1);
+	}
 	template <typename T = void>
 	inline void free(T *p) {
 		std::free(p);
