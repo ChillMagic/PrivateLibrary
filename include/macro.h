@@ -3,7 +3,11 @@
 
 #pragma once
 #ifndef PRILIB
-#define PRILIB         PriLib
+#ifdef PRILIB_NAME
+#	define PRILIB         PRILIB_NAME
+#else
+#	define PRILIB         PriLib
+#endif
 
 #define PRILIB_BEGIN   namespace PRILIB {
 #define PRILIB_END     }
