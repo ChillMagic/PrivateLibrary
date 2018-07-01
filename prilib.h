@@ -22,6 +22,7 @@
 #include "include/prints.h"
 #include "include/random.h"
 #include "include/range.h"
+#include "include/rational-convert.h"
 #include "include/rational.h"
 #include "include/record.h"
 #include "include/storeptr.h"
