@@ -7,6 +7,7 @@
 #include "macro.h"
 #include "memory.h"
 #include <cstdio>
+#include <cassert>
 
 PRILIB_BEGIN
 template <typename T>
@@ -41,7 +42,6 @@ private:
 	}
 
 public:
-
 	dyarray(const std::initializer_list<T> &il)
 		: dyarray(il.begin(), il.end()) {}
 
@@ -63,9 +63,6 @@ public:
 	template <size_t N>
 	explicit dyarray(T (&arr)[N])
 		: dyarray(std::begin(arr), std::end(arr)) {}
-
-	explicit dyarray(const T &t)
-		: dyarray({ t }) {}
 
 	~dyarray() {}
 

@@ -153,6 +153,19 @@ public:
 		read(&element, 1);
 	}
 };
+
+class StdIn : public TextFile
+{
+public:
+	StdIn() : TextFile(stdin) {}
+};
+
+class StdOut : public TextFile
+{
+public:
+	StdOut() : TextFile(stdout) {}
+};
+
 PRILIB_END
 
 #endif
