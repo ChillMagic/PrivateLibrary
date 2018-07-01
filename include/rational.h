@@ -1,9 +1,9 @@
-// number.h
+// rational.h
 // * PrivateLibrary
 
 #pragma once
-#ifndef _PRILIB_NUMBER_H_
-#define _PRILIB_NUMBER_H_
+#ifndef _PRILIB_RATIONAL_H_
+#define _PRILIB_RATIONAL_H_
 #include "macro.h"
 #include <cmath>
 #include <string>
