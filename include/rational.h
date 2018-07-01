@@ -12,10 +12,6 @@
 PRILIB_BEGIN
 namespace Number
 {
-
-	//--------------------
-	// * Class Rational
-	//--------------------
 	template <typename T>
 	class Rational
 	{
@@ -29,25 +25,22 @@ namespace Number
 
 	public:
 		Rational& operator=(const Rational &r) {
-			this->numerator = r.numerator;
-			this->denominator = r.denominator;
+			this->_numerator = r._numerator;
+			this->_denominator = r._denominator;
 			return *this;
 		}
 
 		Rational& operator+=(const Rational &r) {
-			return initialize(numerator * r.denominator + r.numerator * denominator, denominator * r.denominator);
+			return initialize(_numerator * r._denominator + r._numerator * _denominator, _denominator * r._denominator);
 		}
-
 		Rational& operator-=(const Rational &r) {
-			return initialize(numerator * r.denominator - r.numerator * denominator, denominator * r.denominator);
+			return initialize(_numerator * r._denominator - r._numerator * _denominator, _denominator * r._denominator);
 		}
-
 		Rational& operator*=(const Rational &r) {
-			return initialize(numerator * r.numerator, denominator * r.denominator);
+			return initialize(_numerator * r._numerator, _denominator * r._denominator);
 		}
-
 		Rational& operator/=(const Rational &r) {
-			return initialize(numerator * r.denominator, denominator * r.numerator);
+			return initialize(_numerator * r._denominator, _denominator * r._numerator);
 		}
 
 		friend const Rational operator+(const Rational &lhs, const Rational &rhs) { return Rational(lhs) += rhs; }
@@ -55,16 +48,16 @@ namespace Number
 		friend const Rational operator*(const Rational &lhs, const Rational &rhs) { return Rational(lhs) *= rhs; }
 		friend const Rational operator/(const Rational &lhs, const Rational &rhs) { return Rational(lhs) /= rhs; }
 
-		friend bool operator==(const Rational &lhs, const Rational &rhs) { return lhs.equal(rhs); }
-		friend bool operator!=(const Rational &lhs, const Rational &rhs) { return !lhs.equal(rhs); }
-		friend bool operator>(const Rational &lhs, const Rational &rhs) { return lhs.compare(rhs) > 0; }
-		friend bool operator>=(const Rational &lhs, const Rational &rhs) { return lhs.compare(rhs) >= 0; }
-		friend bool operator<(const Rational &lhs, const Rational &rhs) { return lhs.compare(rhs) < 0; }
-		friend bool operator<=(const Rational &lhs, const Rational &rhs) { return lhs.compare(rhs) <= 0; }
+		friend bool operator==(const Rational &lhs, const Rational &rhs) { return lhs._equal(rhs); }
+		friend bool operator!=(const Rational &lhs, const Rational &rhs) { return !lhs._equal(rhs); }
+		friend bool operator>(const Rational &lhs, const Rational &rhs) { return lhs._compare(rhs) > 0; }
+		friend bool operator>=(const Rational &lhs, const Rational &rhs) { return lhs._compare(rhs) >= 0; }
+		friend bool operator<(const Rational &lhs, const Rational &rhs) { return lhs._compare(rhs) < 0; }
+		friend bool operator<=(const Rational &lhs, const Rational &rhs) { return lhs._compare(rhs) <= 0; }
 
 		friend const Rational operator+(const Rational &r) { return r; }
-		friend const Rational operator-(const Rational &r) { return Rational(-r.numerator, r.denominator); }
-		friend const Rational operator~(const Rational &r) { return Rational(r.denominator, r.numerator); }
+		friend const Rational operator-(const Rational &r) { return Rational(-r._numerator, r._denominator); }
+		friend const Rational operator~(const Rational &r) { return Rational(r._denominator, r._numerator); }
 
 	public:
 		friend Type floor(const Rational &r) { return r.floor(); }
@@ -74,51 +67,79 @@ namespace Number
 		friend const Rational abs(const Rational &a) {
 			using std::abs;
 
-			return Rational(abs(a.getNum()), a.getDen());
+			return Rational(abs(a.num()), a.den());
 		}
 
 		friend const Rational mod(const Rational &lhs, const Rational &rhs) {
 			return lhs - (rhs * (lhs / rhs).floor());
 		}
-
 		friend const Rational rem(const Rational &lhs, const Rational &rhs) {
 			return  lhs - (rhs * (lhs / rhs).fix());
 		}
 
 	public:
-		const Type& getNum() const { return numerator; }
-		const Type& getDen() const { return denominator; }
+		const Type& num() const { return _numerator; }
+		const Type& den() const { return _denominator; }
 
 	public:
 		bool isNaN() const {
-			return (denominator == 0 && numerator == 0) || (denominator < 0);
+			return (_denominator == 0 && _numerator == 0) || (_denominator < 0);
 		}
 		bool isInf() const {
-			return (denominator == 0 && numerator != 0);
+			return (_denominator == 0 && _numerator != 0);
 		}
 		bool isInt() const {
-			return denominator == 1;
+			return _denominator == 1;
 		}
 		bool isPositive() const {
-			return numerator > 0;
+			return _numerator > 0;
 		}
 		bool isZero() const {
-			return numerator == 0;
+			return _numerator == 0;
 		}
 		bool isNegative() const {
-			return numerator < 0;
+			return _numerator < 0;
+		}
+
+	public:
+		Type floor() const {
+			if (isInf())
+				return std::numeric_limits<Type>::max();
+			else if (isNaN())
+				return Type(0);
+			else if (isZero())
+				return Type(0);
+			else if (isInt())
+				return _numerator;
+			else
+				return isPositive() ? (_numerator / _denominator) : (_numerator / _denominator - 1);
+		}
+		Type ceil() const {
+			if (isInf())
+				return std::numeric_limits<Type>::max();
+			else if (isNaN())
+				return Type(0);
+			else if (isZero())
+				return Type(0);
+			else if (isInt())
+				return _numerator;
+			else
+				return isPositive() ? (_numerator / _denominator + 1) : (_numerator / _denominator);
+		}
+		Type fix() const {
+			return isPositive() ? floor() : ceil();
 		}
 
 	private:
-		Type numerator;
-		Type denominator;
+		Type _numerator;
+		Type _denominator;
 
 	private:
-		Rational & initialize(const Type &num, const Type &den) {
+		Rational& initialize(const Type &num, const Type &den) {
 			Type g = gcd(num, den);
-			numerator = num / g;
-			denominator = den / g;
-			adjust(numerator, denominator);
+			_numerator = num / g;
+			_denominator = den / g;
+			adjust(_numerator, _denominator);
 			return *this;
 		}
 
@@ -131,57 +152,27 @@ namespace Number
 		}
 
 		static void adjust(Type &num, Type &den) {
-			bool _isnegative = false;
+			bool isnegative = false;
 			if (num < 0) {
 				num = -num;
-				_isnegative = !_isnegative;
+				isnegative = !isnegative;
 			}
 			if (den < 0) {
 				den = -den;
-				_isnegative = !_isnegative;
+				isnegative = !isnegative;
 			}
 
-			if (_isnegative) {
+			if (isnegative) {
 				num = -num;
 			}
 		}
 
 	private:
-		bool equal(const Rational &r) const {
-			return r.numerator == this->numerator && r.denominator == this->denominator;
+		bool _equal(const Rational &r) const {
+			return r._numerator == this->_numerator && r._denominator == this->_denominator;
 		}
-		Type compare(const Rational &r) const {
-			return this->numerator * r.denominator - r.numerator * this->denominator;
-		}
-
-		Type floor() const {
-			if (isInf())
-				return std::numeric_limits<Type>::max();
-			else if (isNaN())
-				return Type(0);
-			else if (isZero())
-				return Type(0);
-			else if (isInt())
-				return numerator;
-			else
-				return isPositive() ? (numerator / denominator) : (numerator / denominator - 1);
-		}
-
-		Type ceil() const {
-			if (isInf())
-				return std::numeric_limits<Type>::max();
-			else if (isNaN())
-				return Type(0);
-			else if (isZero())
-				return Type(0);
-			else if (isInt())
-				return numerator;
-			else
-				return isPositive() ? (numerator / denominator + 1) : (numerator / denominator);
-		}
-
-		Type fix() const {
-			return isPositive() ? floor() : ceil();
+		Type _compare(const Rational &r) const {
+			return this->_numerator * r._denominator - r._numerator * this->_denominator;
 		}
 	};
 
@@ -190,58 +181,13 @@ namespace Number
 		using std::to_string;
 
 		if (a.isInt())
-			return to_string(a.getNum());
+			return to_string(a.num());
 		else if (a.isInf())
 			return "Inf";
 		else if (a.isNaN())
 			return "NaN";
 		else
-			return to_string(a.getNum()) + "/" + to_string(a.getDen());
-	}
-
-	//--------------------
-	// * Convert
-	//--------------------
-	
-	template <typename T>
-	inline Rational<T> get_num(const std::string &str)
-	{
-		if (str.size() > 18)
-			return Rational<T>(0, 0);
-		else
-			return Rational<T>(std::stoll(str));
-	}
-
-	template <typename T>
-	inline Rational<T> to_rational(const std::string &);
-
-	template <>
-	inline Rational<long long> to_rational(const std::string &str)
-	{
-		using Type = long long;
-
-		size_t i1 = str.find('/');
-		size_t i2 = str.find('.');
-
-		if (i1 != std::string::npos) {
-			if (i1 == str.rfind('/') && i2 == std::string::npos)
-				return Rational<Type>(std::stoi(str.substr(0, i1)), std::stoi(str.substr(i1 + 1, std::string::npos)));
-		}
-		else {
-			if (i2 != std::string::npos) {
-				if (i2 == str.rfind('.')) {
-					Rational<Type> n = get_num<Type>(str.substr(0, i2));
-					std::string substr(str.substr(i2 + 1, std::string::npos));
-					Rational<Type> r = get_num<Type>(substr);
-					Type m = (Type)powl((long double)10, (long double)substr.size());
-					return r / m + n;
-				}
-			}
-			else {
-				return get_num<Type>(str);
-			}
-		}
-		return Rational<Type>(0, 0);
+			return to_string(a.num()) + "/" + to_string(a.den());
 	}
 }
 PRILIB_END
