@@ -24,8 +24,11 @@ private:
 	template <size_t N> struct Type_size_t { using Type = size_t; };
 
 public:
-	MatrixBase(typename Type_size_t<Idx>::Type... size)
-		: _sizes{ size... }, _data(_get_size()) {}
+	explicit MatrixBase(typename Type_size_t<Idx>::Type... size)
+		: _sizes{ size... }, _capacity(_get_size()), _data(_capacity) {}
+
+	explicit MatrixBase(T *src, typename Type_size_t<Idx>::Type... size)
+		: _sizes{ size... }, _capacity(_get_size()), _data(dyarray<T>::create(src, _capacity)) {}
 
 	T& operator()(typename Type_size_t<Idx>::Type... id) {
 		return _data[_get_index(id...)];
@@ -39,14 +42,21 @@ public:
 		return _sizes[dim];
 	}
 	size_t capacity() const {
-		return _data.size();
+		return _capacity;
 	}
 	static constexpr size_t dimension() {
 		return Dimension;
 	}
 
+public:
+	static size_t capacity(typename Type_size_t<Idx>::Type... size) {
+		size_t sizes[Dimension] = { size... };
+		return std::accumulate(std::begin(sizes), std::end(sizes), size_t(1), std::multiplies<size_t>());
+	}
+
 private:
 	size_t _sizes[N];
+	size_t _capacity;
 	dyarray<T> _data;
 
 	// Basic functions :

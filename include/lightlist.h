@@ -30,7 +30,7 @@ public:
 	template <typename AFTy, typename FFTy>
 	explicit lightlist(size_t capacity, AFTy alloc, FFTy free)
 		// This means lightlist can be used for value type (have no destructor).
-		: _capacity(capacity), data(alloc(_capacity), free) {}
+		: _capacity(capacity), _data(alloc(_capacity), free) {}
 
 	explicit lightlist(const std::initializer_list<T> &il)
 		: lightlist(il.begin(), il.end()) {}
@@ -38,36 +38,43 @@ public:
 	template <typename Iter>
 	lightlist(Iter begin, Iter end)
 		: lightlist(static_cast<size_t>(end - begin)) {
-		std::copy(begin, end, _PointerIterator(data.get()));
+		std::copy(begin, end, _PointerIterator(_data.get()));
 	}
 
 	template <typename Iter>
 	lightlist(Iter begin, size_t capacity)
 		: lightlist(capacity) {
-		std::copy_n(begin, _capacity, _PointerIterator(data.get()));
+		std::copy_n(begin, _capacity, _PointerIterator(_data.get()));
 	}
 
 	template <typename Iter>
 	lightlist(Iter begin, Iter end, size_t capacity)
 		: lightlist(capacity) {
-		std::copy(begin, end, _PointerIterator(data.get()));
+		std::copy(begin, end, _PointerIterator(_data.get()));
 	}
 
 	template <size_t N>
 	explicit lightlist(T (&arr)[N])
 		: lightlist(std::begin(arr), std::end(arr)) {}
 
-	~lightlist() {}
+public:
+	static lightlist create(T *src, size_t capacity) {
+		lightlist r;
+		r._capacity = capacity;
+		r._data = std::shared_ptr<T>(src, [](T *ptr) {});
+		return r;
+	}
 
-	T* begin() { return data.get(); }
-	T* end() { return data.get() + _capacity; }
-	const T* begin() const { return data.get(); }
-	const T* end() const { return data.get() + _capacity; }
-	const T* cbegin() const { return data.get(); }
-	const T* cend() const { return data.get() + _capacity; }
+public:
+	T* begin() { return _data.get(); }
+	T* end() { return _data.get() + _capacity; }
+	const T* begin() const { return _data.get(); }
+	const T* end() const { return _data.get() + _capacity; }
+	const T* cbegin() const { return _data.get(); }
+	const T* cend() const { return _data.get() + _capacity; }
 
-	T* get(size_t index = 0) { return data.get() + index; }
-	const T* get(size_t index = 0) const { return data.get() + index; }
+	T* get(size_t index = 0) { return _data.get() + index; }
+	const T* get(size_t index = 0) const { return _data.get() + index; }
 
 	T& operator[](size_t id) { return *get(id); }
 	const T& operator[](size_t id) const { return *get(id); }
@@ -77,8 +84,8 @@ public:
 
 	T& front() { return *begin(); }
 	const T& front() const { return *begin(); }
-	T& back() { return *(data.get() + _capacity - 1); }
-	const T& back() const { return *(data.get() + _capacity - 1); }
+	T& back() { return *(_data.get() + _capacity - 1); }
+	const T& back() const { return *(_data.get() + _capacity - 1); }
 
 	size_t size() const { return _capacity; }
 	bool empty() const { return _capacity == 0; }
@@ -86,13 +93,13 @@ public:
 	void recapacity(size_t ncapacity) {
 		size_t c = std::max(_capacity, ncapacity);
 		lightlist nl(c);
-		Memory::copyTo(nl.data.get(), data.get(), _capacity);
+		Memory::copyTo(nl._data.get(), _data.get(), _capacity);
 		*this = nl;
 	}
 
 private:
 	size_t _capacity = 0;
-	std::shared_ptr<T> data = nullptr;
+	std::shared_ptr<T> _data = nullptr;
 };
 
 template <typename T>

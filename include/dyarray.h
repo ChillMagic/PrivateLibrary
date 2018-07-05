@@ -24,21 +24,21 @@ public:
 
 	explicit dyarray(size_t capacity)
 		// This means dyarray can be used for class type (have destructor).
-		: _capacity(capacity), data(Memory::new_<T>(_capacity), Memory::delete_<T>) {}
+		: _capacity(capacity), _data(Memory::new_<T>(_capacity), Memory::delete_<T>) {}
 
 private:
 	template <typename Iter>
 	explicit dyarray(size_t capacity, Iter copy_iter_begin)
 		// This function is used in other constructors.
-		: _capacity(capacity), data(Memory::alloc<T>(_capacity), [&](T* p) { Memory::delete_n<T>(p, _capacity); }) {
-		Memory::copy_n<T>(data.get(), copy_iter_begin, capacity);
+		: _capacity(capacity), _data(Memory::alloc<T>(_capacity), [&](T* p) { Memory::delete_n<T>(p, _capacity); }) {
+		Memory::copy_n<T>(_data.get(), copy_iter_begin, capacity);
 	}
 	template <typename Iter>
 	explicit dyarray(size_t capacity, Iter copy_iter_begin, size_t create_begin)
 		// This function is used in other constructors.
-		: _capacity(capacity), data(Memory::alloc<T>(_capacity), [&](T* p) { Memory::delete_n<T>(p, _capacity); }) {
-		Memory::copy_n<T>(data.get(), copy_iter_begin, create_begin);
-		Memory::new_n<T>(data.get() + create_begin, capacity - create_begin);
+		: _capacity(capacity), _data(Memory::alloc<T>(_capacity), [&](T* p) { Memory::delete_n<T>(p, _capacity); }) {
+		Memory::copy_n<T>(_data.get(), copy_iter_begin, create_begin);
+		Memory::new_n<T>(_data.get() + create_begin, capacity - create_begin);
 	}
 
 public:
@@ -64,25 +64,32 @@ public:
 	explicit dyarray(T (&arr)[N])
 		: dyarray(std::begin(arr), std::end(arr)) {}
 
-	~dyarray() {}
+public:
+	static dyarray create(T *src, size_t capacity) {
+		dyarray r;
+		r._capacity = capacity;
+		r._data = std::shared_ptr<T>(src, [](T *ptr) {});
+		return r;
+	}
 
-	T* begin() { return data.get(); }
-	T* end() { return data.get() + _capacity; }
-	const T* begin() const { return data.get(); }
-	const T* end() const { return data.get() + _capacity; }
-	const T* cbegin() const { return data.get(); }
-	const T* cend() const { return data.get() + _capacity; }
+public:
+	T* begin() { return _data.get(); }
+	T* end() { return _data.get() + _capacity; }
+	const T* begin() const { return _data.get(); }
+	const T* end() const { return _data.get() + _capacity; }
+	const T* cbegin() const { return _data.get(); }
+	const T* cend() const { return _data.get() + _capacity; }
 
-	T& operator[](size_t id) { return data.get()[id]; }
-	const T& operator[](size_t id) const { return data.get()[id]; }
+	T& operator[](size_t id) { return _data.get()[id]; }
+	const T& operator[](size_t id) const { return _data.get()[id]; }
 
 	T& at(size_t id) { assert(id < size()); return this->operator[](id); }
 	const T& at(size_t id) const { assert(id < size()); return this->operator[](id); }
 
 	T& front() { return *begin(); }
 	const T& front() const { return *begin(); }
-	T& back() { return *(data.get() + _capacity - 1); }
-	const T& back() const { return *(data.get() + _capacity - 1); }
+	T& back() { return *(_data.get() + _capacity - 1); }
+	const T& back() const { return *(_data.get() + _capacity - 1); }
 
 	size_t size() const { return _capacity; }
 	bool empty() const { return _capacity == 0; }
@@ -90,7 +97,7 @@ public:
 
 private:
 	size_t _capacity = 0;
-	std::shared_ptr<T> data = nullptr;
+	std::shared_ptr<T> _data = nullptr;
 };
 
 template <typename T>
