@@ -18,6 +18,7 @@
 #include "include/indextable.h"
 #include "include/lightlist.h"
 #include "include/macro.h"
+#include "include/matrix.h"
 #include "include/memory.h"
 #include "include/prints.h"
 #include "include/random.h"

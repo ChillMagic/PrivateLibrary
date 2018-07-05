@@ -87,6 +87,13 @@ template <typename T>
 class RIterator
 {
 public:
+	using difference_type = std::ptrdiff_t;
+	using value_type = T;
+	using pointer = T * ;
+	using reference = T & ;
+	using iterator_category = std::random_access_iterator_tag;
+
+public:
 	RIterator(T value) : value(value) {}
 	operator T() const {
 		return value;
@@ -179,6 +186,10 @@ inline Range<size_t> range(int a, size_t b)
 inline Range<size_t> range(size_t a, int b)
 {
 	return Range<size_t>(a, b);
+}
+inline Range<size_t> range(size_t e)
+{
+	return Range<size_t>(0, e);
 }
 
 template <typename T>
