@@ -139,7 +139,10 @@ namespace Number
 			Type g = gcd(num, den);
 			_numerator = num / g;
 			_denominator = den / g;
-			adjust(_numerator, _denominator);
+			if (_denominator < 0) {
+				_denominator = -_denominator;
+				_numerator = -_numerator;
+			}
 			return *this;
 		}
 
@@ -149,22 +152,6 @@ namespace Number
 				std::swap(a, b);
 			}
 			return a;
-		}
-
-		static void adjust(Type &num, Type &den) {
-			bool isnegative = false;
-			if (num < 0) {
-				num = -num;
-				isnegative = !isnegative;
-			}
-			if (den < 0) {
-				den = -den;
-				isnegative = !isnegative;
-			}
-
-			if (isnegative) {
-				num = -num;
-			}
 		}
 
 	private:
