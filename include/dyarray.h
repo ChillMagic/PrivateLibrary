@@ -8,6 +8,7 @@
 #include "memory.h"
 #include <cstdio>
 #include <cassert>
+#include <memory>
 
 PRILIB_BEGIN
 template <typename T>

@@ -21,7 +21,7 @@ public:
 	constexpr static size_t Dimension = N;
 
 private:
-	template <size_t N> struct Type_size_t { using Type = size_t; };
+	template <size_t Nx> struct Type_size_t { using Type = size_t; };
 
 public:
 	explicit MatrixBase(typename Type_size_t<Idx>::Type... size)
@@ -66,20 +66,19 @@ private:
 
 	size_t _get_index(typename Type_size_t<Idx>::Type... id) {
 		assert(_check_index(id...));
-		return __sum(__get_id_mul<Idx>(id)...);
+		// id_2 * size_1 * size_0 + id_1 * size_0 + id_0
+		size_t ids[Dimension] = { id... };
+		size_t index = ids[0];
+		for (size_t i = 1; i != Dimension; ++i) {
+			index += ids[i] * std::accumulate(&_sizes[0], &_sizes[i], size_t(1), std::multiplies<size_t>());
+		}
+		return index;
 	}
 
 	bool _check_index(typename Type_size_t<Idx>::Type... id) {
 		size_t ids[Dimension] = { id... };
 		return std::all_of(range(Dimension).begin(), range(Dimension).end(), [&](size_t i) { return ids[i] < _sizes[i]; });
 	}
-
-	// Using in _get_index :
-	template <size_t RN> size_t __get_size_product() { return _sizes[RN + 1] * __get_size_product<RN + 1>(); }
-	template <> size_t __get_size_product<Dimension - 1>() { return 1; }
-	template <size_t N> size_t __get_id_mul(size_t id) { return id * __get_size_product<N>(); }
-	template <typename... Args> size_t __sum(size_t i, Args... args) { return i + __sum(args...); }
-	size_t __sum(size_t i) { return i; }
 };
 
 template <typename T, size_t N>

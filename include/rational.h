@@ -146,6 +146,7 @@ namespace Number
 			return *this;
 		}
 
+	public:  // TODO
 		static Type gcd(Type a, Type b) {
 			while (b != 0) {
 				a = a % b;
@@ -162,6 +163,29 @@ namespace Number
 			return this->_numerator * r._denominator - r._numerator * this->_denominator;
 		}
 	};
+
+
+	// TODO : find a good way to write these functions.
+	template <typename T>
+	const Rational<T> mod(const Rational<T> &lhs, const Rational<T> &rhs) {
+		return lhs - (rhs * (lhs / rhs).floor());
+	}
+	template <typename T>
+	const Rational<T> mod(const T &lhs, const T &rhs) {
+		return mod(Rational<T>(lhs), Rational<T>(rhs));
+	}
+	template <typename T>
+	const Rational<T> rem(const Rational<T> &lhs, const Rational<T> &rhs) {
+		return  lhs - (rhs * (lhs / rhs).fix());
+	}
+	template <typename T>
+	const Rational<T> rem(const T &lhs, const T &rhs) {
+		return rem(Rational<T>(lhs), Rational<T>(rhs));
+	}
+	template <typename T>
+	const Rational<T> gcd(const T &lhs, const T &rhs) {
+		return Rational<T>::gcd(lhs, rhs);
+	}
 
 	template <typename T>
 	inline std::string to_string(const Rational<T> &a) {
