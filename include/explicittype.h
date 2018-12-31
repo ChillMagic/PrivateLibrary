@@ -35,11 +35,28 @@ public:
 		: ExplicitType<_Ty>(data) {}
 
 	explicit ExplicitType(_Ty &&data)
-		: ExplicitType<_Ty>(data) {}
+		: ExplicitType<_Ty>(std::move(data)) {}
 
 	explicit ExplicitType()
 		: ExplicitType<_Ty>(_DfV) {}
 };
+
+#define DefineExplicitType(TypeName, Type) \
+class TypeName : public ::PRILIB::ExplicitType<Type> { \
+public: \
+	explicit TypeName(const Type &data) : ::PRILIB::ExplicitType<Type>(data) {} \
+	explicit TypeName(Type &&data) : ::PRILIB::ExplicitType<Type>(std::move(data)) {} \
+	explicit TypeName() : ::PRILIB::ExplicitType<Type>() {} \
+};
+
+#define DefineExplicitTypeWithValue(TypeName, Type, Value) \
+class TypeName : public ::PRILIB::ExplicitType<Type, Value> { \
+public: \
+	explicit TypeName(const Type &data) : ::PRILIB::ExplicitType<Type, Value>(data) {} \
+	explicit TypeName(Type &&data) : ::PRILIB::ExplicitType<Type, Value>(std::move(data)) {} \
+	explicit TypeName() : ::PRILIB::ExplicitType<Type, Value>(Value) {} \
+};
+
 PRILIB_END
 
 #endif
