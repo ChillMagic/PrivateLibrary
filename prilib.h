@@ -27,6 +27,7 @@
 #include "include/rational.h"
 #include "include/record.h"
 #include "include/storeptr.h"
+#include "include/stringview.h"
 #include "include/timer.h"
 #include "include/uniqueptrvector.h"
 
