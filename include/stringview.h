@@ -42,10 +42,58 @@ private:
 	const char *_pointer = nullptr;
 };
 
-inline std::string toSubString(const StringView &lhs, const StringView &rhs) {
-	assert(lhs.get() < rhs.get());
-	return lhs.toSubString(rhs.get() - lhs.get());
-}
+class StringViewRange
+{
+public:
+	using SizeType = size_t;
+	using OffsetType = ptrdiff_t;
+public:
+	explicit StringViewRange(const std::string &begin)
+		: _data(begin), _size(begin.size()) {}
+
+	explicit StringViewRange(const std::string &begin, SizeType length)
+		: _data(begin), _size(length) { assert(length <= begin.size()); }
+
+	explicit StringViewRange(const char *begin)
+		: _data(begin), _size(std::strlen(begin)) {}
+
+	explicit StringViewRange(const char *begin, SizeType length)
+		: _data(begin), _size(length) {}
+
+	explicit StringViewRange(const StringView &strview, SizeType length)
+		: _data(strview), _size(length) {}
+
+	explicit StringViewRange(const StringView &begin, const StringView &end)
+		: _data(begin), _size(end.get() - begin.get()) { assert(end.get() >= begin.get()); }
+
+	std::string toString() const {
+		return _data.toSubString(_size);
+	}
+
+	const char* begin() const {
+		return _data.get();
+	}
+	const char* end() const {
+		return _data.get(_size);
+	}
+
+	SizeType length() const {
+		return _size;
+	}
+
+	SizeType size() const {
+		return _size;
+	}
+
+	char operator[](OffsetType offset) const {
+		assert((offset >= 0 && offset < _size) || (offset < 0 && -offset <= _size));
+		return (offset >= 0) ? (_data[offset]) : (_data[_size + offset]);
+	}
+
+private:
+	StringView _data;
+	SizeType _size = 0;
+};
 PRILIB_END
 
 #endif
