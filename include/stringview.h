@@ -89,7 +89,7 @@ public:
 	}
 
 	char operator[](OffsetType offset) const {
-		assert((offset >= 0 && offset < _size) || (offset < 0 && -offset <= _size));
+		assert((offset >= 0 && static_cast<SizeType>(offset) < _size) || (offset < 0 && static_cast<SizeType>(-offset) <= _size));
 		return (offset >= 0) ? (_data[offset]) : (_data[_size + offset]);
 	}
 
