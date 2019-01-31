@@ -5,6 +5,7 @@
 #ifndef _PRILIB_EXPLICITTYPE_H_
 #define _PRILIB_EXPLICITTYPE_H_
 #include "macro.h"
+#include <utility>
 
 PRILIB_BEGIN
 template <typename _Ty, _Ty... _DfV>

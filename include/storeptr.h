@@ -5,6 +5,7 @@
 #ifndef _PRILIB_STOREPTR_H_
 #define _PRILIB_STOREPTR_H_
 #include "macro.h"
+#include <memory>
 
 PRILIB_BEGIN
 template <typename T>

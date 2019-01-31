@@ -6,6 +6,7 @@
 #define _PRILIB_INDEXTABLE_H_
 #include "macro.h"
 #include "bijectionmap.h"
+#include <cassert>
 
 PRILIB_BEGIN
 template <typename _KTy, typename _VTy>

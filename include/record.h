@@ -5,6 +5,7 @@
 #ifndef _PRILIB_RECORD_H_
 #define _PRILIB_RECORD_H_
 #include "macro.h"
+#include <utility>
 
 PRILIB_BEGIN
 template <typename T>

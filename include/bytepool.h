@@ -9,6 +9,7 @@
 #include "lightlist.h"
 #include <vector>
 #include <memory>
+#include <cassert>
 
 PRILIB_BEGIN
 class BytePoolFixed

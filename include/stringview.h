@@ -63,6 +63,9 @@ public:
 	explicit StringViewRange(const StringView &strview, SizeType length)
 		: _data(strview), _size(length) {}
 
+	explicit StringViewRange(const StringView &strview, SizeType begin, SizeType end)
+		: _data(strview.get() + begin), _size(end - begin) {}
+
 	explicit StringViewRange(const StringView &begin, const StringView &end)
 		: _data(begin), _size(end.get() - begin.get()) { assert(end.get() >= begin.get()); }
 
