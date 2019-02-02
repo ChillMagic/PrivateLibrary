@@ -3,6 +3,7 @@
 #include "record.h"
 #include "range.h"
 #include <algorithm>
+#include <cerrno>
 
 PRILIB_BEGIN
 namespace Convert
