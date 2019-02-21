@@ -20,7 +20,7 @@ public:
 
 	const char* get(OffsetType offset = 0) const {
 		assert(_pointer);
-	    return _pointer + offset;
+		return _pointer + offset;
 	}
 	char operator[](OffsetType offset) const {
 		assert(_pointer);
