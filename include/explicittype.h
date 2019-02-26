@@ -21,7 +21,7 @@ public:
 		: data(data) {}
 
 	explicit ExplicitType(_Ty &&data)
-		: data(data) {}
+		: data(std::move(data)) {}
 
 	explicit ExplicitType() {}
 
