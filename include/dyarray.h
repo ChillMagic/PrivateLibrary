@@ -110,6 +110,11 @@ public:
 	void push_back(const T &e) {
 		_data[_count++] = e;
 	}
+	template <typename... Args>
+	void emplace_back(Args&&... args) {
+		_data[_count].~T();
+		new (&_data[_count++]) T (std::forward<Args>(args)...);
+	}
 	template <typename Iter>
 	void insert(Iter beg, Iter end) {
 		for (auto &e : rangei(beg, end)) {
