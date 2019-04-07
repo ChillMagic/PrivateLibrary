@@ -195,10 +195,10 @@ void TextFile::write(const std::string &str) {
 // * BinaryFile
 //========================
 
-void BinaryFile::write(const void * buffer, size_t elsize, size_t elcount) {
-	fwrite(buffer, elsize, elcount, _file.get());
+bool BinaryFile::write(const void * buffer, size_t elsize, size_t elcount) {
+	return fwrite(buffer, elsize, elcount, _file.get()) != 0;
 }
-void BinaryFile::read(void * buffer, size_t elsize, size_t elcount) {
-	fread(buffer, elsize, elcount, _file.get());
+bool BinaryFile::read(void * buffer, size_t elsize, size_t elcount) {
+	return fread(buffer, elsize, elcount, _file.get()) != 0;
 }
 PRILIB_END

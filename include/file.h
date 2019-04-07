@@ -132,25 +132,39 @@ public:
 		return *this;
 	}
 
-	void write(const void *buffer, size_t elsize, size_t elcount);
-	void read(void *buffer, size_t elsize, size_t elcount);
+	bool write(const void *buffer, size_t elsize, size_t elcount);
+	bool read(void *buffer, size_t elsize, size_t elcount);
 
 	template <typename T>
-	void write(const T *buffer, size_t elcount) {
-		write(buffer, sizeof(T), elcount);
+	bool write(const T *buffer, size_t elcount) {
+		return write(buffer, sizeof(T), elcount);
 	}
 	template <typename T>
-	void write(const T &element) {
-		write(&element, 1);
+	bool write(const T &element) {
+		return write(&element, 1);
 	}
 
 	template <typename T>
-	void read(T *buffer, size_t elcount) {
-		read(buffer, sizeof(T), elcount);
+	bool read(T *buffer, size_t elcount) {
+		return read(buffer, sizeof(T), elcount);
 	}
 	template <typename T>
-	void read(T &element) {
-		read(&element, 1);
+	bool read(T &element) {
+		return read(&element, 1);
+	}
+
+	std::string read_string() {
+		std::string result;
+		char c;
+		while (read(c)) {
+			if (c) {
+				result.push_back(c);
+			}
+			else {
+				break;
+			}
+		}
+		return result;
 	}
 };
 

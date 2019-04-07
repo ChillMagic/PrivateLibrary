@@ -93,7 +93,7 @@ namespace Convert
 	template <typename T>
 	std::string to_hex(T value, const char *fmt)
 	{
-		const size_t len = sizeof(T) * 2 + 1;
+		const size_t len = sizeof(T) * 2 + 1 + 4;
 		char data[len];
 #if defined(_MSC_VER)
 		sprintf_s(data, len, fmt, value);
