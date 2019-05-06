@@ -16,7 +16,7 @@ public:
 public:
 	StringView(const char *str, OffsetType offset = 0) : _pointer(str + offset) {}
 	StringView(const std::string &str, OffsetType offset = 0) : _pointer(str.data() + offset) {}
-	StringView(const PriLib::charptr &cp, OffsetType offset = 0) : _pointer(cp.get() + offset) {}
+	StringView(const charptr &cp, OffsetType offset = 0) : _pointer(cp.get() + offset) {}
 
 	const char* get(OffsetType offset = 0) const {
 		assert(_pointer);
