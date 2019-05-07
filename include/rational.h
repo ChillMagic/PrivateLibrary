@@ -137,17 +137,24 @@ namespace Number
 	private:
 		Rational& initialize(const Type &num, const Type &den) {
 			Type g = gcd(num, den);
-			_numerator = num / g;
-			_denominator = den / g;
-			if (_denominator < 0) {
-				_denominator = -_denominator;
-				_numerator = -_numerator;
+			if (num == 0 && den == 0) {
+				_numerator = _denominator = 0;
+			}
+			else {
+				_numerator = num / g;
+				_denominator = den / g;
+				if (_denominator < 0) {
+					_denominator = -_denominator;
+					_numerator = -_numerator;
+				}
 			}
 			return *this;
 		}
 
 	public:  // TODO
 		static Type gcd(Type a, Type b) {
+			a = std::abs(a);
+			b = std::abs(b);
 			while (b != 0) {
 				a = a % b;
 				std::swap(a, b);
