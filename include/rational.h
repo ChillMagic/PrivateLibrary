@@ -148,6 +148,10 @@ namespace Number
 
 	public:  // TODO
 		static Type gcd(Type a, Type b) {
+			if (a == 0 && b == 0)
+				return 0;
+			a = std::abs(a);
+			b = std::abs(b);
 			while (b != 0) {
 				a = a % b;
 				std::swap(a, b);
