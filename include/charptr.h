@@ -26,9 +26,11 @@ public:
 	char* get() const { return _data.get(); }
 	void set(size_t begin, const char *str) { Memory::copyTo(_data.get() + begin, str, strlen(str)); } // Unsafe
 	void set(size_t begin, const std::string &str) { Memory::copyTo(_data.get() + begin, str.data(), str.size()); } // Unsafe
-	std::string to_string() const { return _data.get(); }
+	std::string str() const { return _data.get(); }
 	size_t capacity() const { return _capacity; }
 	size_t length() const { size_t len = strlen(_data.get()); return len < _capacity ? len : _capacity; }
+
+	std::string to_string() const { return str(); }
 
 private:
 	size_t _capacity;

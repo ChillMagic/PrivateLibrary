@@ -7,6 +7,7 @@
 #include "macro.h"
 #include "charptr.h"
 #include <cassert>
+#include <cstddef>
 
 PRILIB_BEGIN
 class StringView

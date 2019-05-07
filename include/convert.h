@@ -5,6 +5,7 @@
 #ifndef _PRILIB_CONVERT_H_
 #define _PRILIB_CONVERT_H_
 #include "macro.h"
+#include "charptr.h"
 #include <string>
 #include <functional>
 #include <limits>
@@ -44,7 +45,7 @@ namespace Convert
 	}
 	inline std::string to_string(bool b)
 	{
-		return std::string((b == true) ? "T" : "F");
+		return std::string(b ? "T" : "F");
 	}
 	inline std::string to_string(char c)
 	{
@@ -55,9 +56,9 @@ namespace Convert
 	inline std::string to_string(const void *p)
 	{
 		size_t size = sizeof(void*) * 2 + 3;
-		char *str = new char[size];
-		snprintf(str, size, "0x%p", p);
-		return str;
+		charptr buffer(size);
+		snprintf(buffer, size, "0x%p", p);
+		return buffer.str();
 	}
 	template <char B = '\0', char E = '\0', char D = '\0', typename Iter, typename Func>
 	std::string to_string(Iter begin, Iter end, Func func) {
