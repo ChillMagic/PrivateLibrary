@@ -15,6 +15,7 @@
 #include "include/dyarray.h"
 #include "include/explicittype.h"
 #include "include/file.h"
+#include "include/hashstringpool.h"
 #include "include/indextable.h"
 #include "include/lightlist.h"
 #include "include/macro.h"
