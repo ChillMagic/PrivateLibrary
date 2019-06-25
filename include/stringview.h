@@ -10,14 +10,14 @@
 #include <cstddef>
 
 PRILIB_BEGIN
-class StringView
+class CharPtrView
 {
 public:
 	using OffsetType = size_t;
 public:
-	StringView(const char *str, OffsetType offset = 0) : _pointer(str + offset) {}
-	StringView(const std::string &str, OffsetType offset = 0) : _pointer(str.data() + offset) {}
-	StringView(const charptr &cp, OffsetType offset = 0) : _pointer(cp.get() + offset) {}
+	CharPtrView(const char *str, OffsetType offset = 0) : _pointer(str + offset) {}
+	CharPtrView(const std::string &str, OffsetType offset = 0) : _pointer(str.data() + offset) {}
+	CharPtrView(const charptr &cp, OffsetType offset = 0) : _pointer(cp.get() + offset) {}
 
 	const char* get(OffsetType offset = 0) const {
 		assert(_pointer);
@@ -27,7 +27,7 @@ public:
 		assert(_pointer);
 	    return _pointer[offset];
 	}
-	StringView& operator+=(OffsetType offset) {
+	CharPtrView& operator+=(OffsetType offset) {
 		assert(_pointer);
 		this->_pointer += offset;
 		return *this;
@@ -43,31 +43,31 @@ private:
 	const char *_pointer = nullptr;
 };
 
-class StringViewRange
+class StringView
 {
 public:
 	using SizeType = size_t;
 	using OffsetType = ptrdiff_t;
 public:
-	explicit StringViewRange(const std::string &begin)
+	explicit StringView(const std::string &begin)
 		: _data(begin), _size(begin.size()) {}
 
-	explicit StringViewRange(const std::string &begin, SizeType length)
+	explicit StringView(const std::string &begin, SizeType length)
 		: _data(begin), _size(length) { assert(length <= begin.size()); }
 
-	explicit StringViewRange(const char *begin)
+	explicit StringView(const char *begin)
 		: _data(begin), _size(std::strlen(begin)) {}
 
-	explicit StringViewRange(const char *begin, SizeType length)
+	explicit StringView(const char *begin, SizeType length)
 		: _data(begin), _size(length) {}
 
-	explicit StringViewRange(const StringView &strview, SizeType length)
+	explicit StringView(const CharPtrView &strview, SizeType length)
 		: _data(strview), _size(length) {}
 
-	explicit StringViewRange(const StringView &strview, SizeType begin, SizeType end)
+	explicit StringView(const CharPtrView &strview, SizeType begin, SizeType end)
 		: _data(strview.get() + begin), _size(end - begin) {}
 
-	explicit StringViewRange(const StringView &begin, const StringView &end)
+	explicit StringView(const CharPtrView &begin, const CharPtrView &end)
 		: _data(begin), _size(end.get() - begin.get()) { assert(end.get() >= begin.get()); }
 
 	std::string toString() const {
@@ -95,7 +95,7 @@ public:
 	}
 
 private:
-	StringView _data;
+	CharPtrView _data;
 	SizeType _size = 0;
 };
 PRILIB_END

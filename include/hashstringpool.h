@@ -60,7 +60,7 @@ public:
 		return HashID(id);
 	}
 
-	HashID insert(const StringViewRange &value) {
+	HashID insert(const StringView &value) {
 		return insert(value.toString());
 	}
 

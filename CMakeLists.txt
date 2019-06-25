@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(PriLib)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 message("")
 message("Operating System : ${CMAKE_SYSTEM_NAME}")
@@ -20,3 +20,4 @@ include_directories(include)
 aux_source_directory(source PRILIB_SOURCE_FILES)
 
 add_library(prilib STATIC ${PRILIB_SOURCE_FILES} include)
+set_property(TARGET prilib PROPERTY CXX_STANDARD 14)

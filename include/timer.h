@@ -11,15 +11,15 @@ PRILIB_BEGIN
 class Timer
 {
 public:
-	Timer() : time(clock()) {}
-	size_t detTime() {
-		clock_t currTime = clock();
-		size_t det = (size_t)(currTime - time);
+	Timer() : time(std::clock()) {}
+	auto detTime() {
+		std::clock_t currTime = std::clock();
+		auto det = currTime - time;
 		time = currTime;
 		return det;
 	}
 
-	clock_t time;
+	std::clock_t time;
 };
 PRILIB_END
 

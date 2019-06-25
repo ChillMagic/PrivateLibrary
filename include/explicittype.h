@@ -23,7 +23,7 @@ public:
 	explicit ExplicitType(_Ty &&data)
 		: data(std::move(data)) {}
 
-	explicit ExplicitType() {}
+	ExplicitType() = default;
 
 	_Ty data;
 };

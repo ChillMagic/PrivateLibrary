@@ -91,10 +91,11 @@ public:
 	bool empty() const { return _capacity == 0; }
 	void resize(size_t nsize) { _capacity = std::min(_capacity, nsize); }
 	void recapacity(size_t ncapacity) {
-		size_t c = std::max(_capacity, ncapacity);
-		lightlist nl(c);
-		Memory::copyTo(nl._data.get(), _data.get(), _capacity);
-		*this = nl;
+		if (ncapacity > _capacity) {
+			lightlist nl(ncapacity);
+			Memory::copyTo(nl._data.get(), _data.get(), _capacity);
+			*this = nl;
+		}
 	}
 
 private:

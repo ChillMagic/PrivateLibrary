@@ -40,7 +40,7 @@ namespace Convert
 	{
 		Record<int> recerr(errno, 0);
 
-		char *end;
+		char *end = nullptr;
 		result = f(str.data(), &end, base);
 
 		if (str.data() + str.size() != end)
